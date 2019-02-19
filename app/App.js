@@ -8,43 +8,87 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import HomeScreen from './HomeScreen';
+import DetailsScreen from './DetailsScreen';
+import ConfigurationScreen from './ConfigurationScreen';
+import ManageRestaurantsScreen from './ManageRestaurantsScreen';
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
+
+import { createStackNavigator, createBottomTabNavigator, createAppContainer } from 'react-navigation';
+const HomeStack = createStackNavigator({
+  Home: { screen: HomeScreen },
+  Details: { screen: DetailsScreen },
 });
 
-type Props = {};
-export default class App extends Component<Props> {
+const ConfigurationStack = createStackNavigator({
+  Configuration: { screen: ConfigurationScreen },
+  Details: { screen: DetailsScreen },
+});
+const ManageRestaurantsStack = createStackNavigator({
+  ManageRestaurants: {screen: ManageRestaurantsScreen},
+});
+const AppContainer = createAppContainer(createBottomTabNavigator(
+  {
+    Home: { screen: HomeStack },
+    Configuration: { screen: ConfigurationStack },
+    ManageRestaurants: {screen: ManageRestaurantsScreen},
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, tintColor }) => {
+        const { routeName } = navigation.state;
+        let iconName;
+        if (routeName === 'Home') {
+          iconName = `md-home`;
+        } else if (routeName === 'Configuration') {
+          iconName = `md-settings`;
+        } else if (routeName === 'ManageRestaurants') {
+          iconName = `md-business`;
+        }
+
+        // You can return any component that you like here! We usually use an
+        // icon component from react-native-vector-icons
+        return <Ionicons name={iconName} size={25} color={tintColor} />;
+      },
+    }),
+    tabBarOptions: {
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray',
+    },
+  }
+));
+
+
+
+const initialState = {
+  testStr: 'hello',
+}
+
+const reducer = (state = initialState, action) => {
+  switch(action.type)
+  {
+    case 'TEST_ONE':
+    console.log("test_one");
+      return {testStr:"hello"};
+    case 'TEST_TWO':
+    console.log("test_two");
+      return {testStr:"Heyo"};
+  }
+  return state;
+}
+
+const store = createStore(reducer);
+
+export default class App extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
+      <Provider store={store}>
+        <AppContainer/>
+      </Provider>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
