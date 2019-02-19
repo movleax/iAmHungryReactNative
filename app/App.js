@@ -13,6 +13,7 @@ import HomeScreen from './HomeScreen';
 import DetailsScreen from './DetailsScreen';
 import ConfigurationScreen from './ConfigurationScreen';
 import ManageRestaurantsScreen from './ManageRestaurantsScreen';
+import AddRestaurantScreen from './AddRestaurantScreen';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 
@@ -29,12 +30,13 @@ const ConfigurationStack = createStackNavigator({
 });
 const ManageRestaurantsStack = createStackNavigator({
   ManageRestaurants: {screen: ManageRestaurantsScreen},
-});
+  AddRestaurant: {screen: AddRestaurantScreen},
+}); 
 const AppContainer = createAppContainer(createBottomTabNavigator(
   {
     Home: { screen: HomeStack },
     Configuration: { screen: ConfigurationStack },
-    ManageRestaurants: {screen: ManageRestaurantsScreen},
+    ManageRestaurants: {screen: ManageRestaurantsStack},
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({

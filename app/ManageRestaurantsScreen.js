@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Text, View, SectionList, TextInput} from 'react-native';
+import {Text, View, SectionList, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // test data
 const ClusterData = [
@@ -52,23 +53,33 @@ class ManageRestaurantsScreen extends Component {
         //     keyExtractor={(item, index) => item + index}
         // />
 
-        <View>
+        <View style={styles.Container}>
             <TextInput 
             onChangeText={(term) => {this.searchUpdated(term)}} 
            // style={styles.searchInput}
-            placeholder="Type a mood to search"/>        
+            placeholder="Type a mood to search"/>     
+
             <SectionList
             renderItem={({item}) => <Text >{item.name}</Text>}
             renderSectionHeader={({section}) => <Text>{section.title}</Text>}
             sections={this.state.dataToShow}
             keyExtractor={(item, index) => item + index}
             />
+
+            <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={this.clickHandler}
+                style={styles.TouchableOpacityStyle}
+                onPress={() => this.props.navigation.navigate('AddRestaurant')}>
+                <Ionicons name={'md-add-circle'} size={50} color={'grey'} style={styles.FloatingButtonStyle}/>
+            </TouchableOpacity>
+
         </View>
       );
     }
   }
   
-  function mapStateToProps(state){
+function mapStateToProps(state){
     return {
         testStr: state.testStr
     }
@@ -80,5 +91,31 @@ function mapDispatchToProps(dispatch){
         testFunctionTwo: () => dispatch({type:'TEST_TWO'}),
     }
 }
+
+const styles = StyleSheet.create({
+    Container: {
+        flex: 1,
+        //justifyContent: 'center',
+        //alignItems: 'center',
+        //backgroundColor: '#F5F5F5',
+      },
+    
+    TouchableOpacityStyle: {
+      position: 'absolute',
+      width: 50,
+      height: 50,
+      alignItems: 'center',
+      justifyContent: 'center',
+      right: 10,
+      bottom: 15,
+    },
+  
+    FloatingButtonStyle: {
+      //resizeMode: 'contain',
+      width: 50,
+      height: 50,
+      //backgroundColor:'black'
+    },
+  });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageRestaurantsScreen);
