@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "IAmHungry-tvOS.app"
-               BlueprintName = "IAmHungry-tvOS"
-               ReferencedContainer = "container:IAmHungry.xcodeproj">
+               BuildableName = "iAmHungry-tvOS.app"
+               BlueprintName = "iAmHungry-tvOS"
+               ReferencedContainer = "container:iAmHungry.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "IAmHungry-tvOSTests.xctest"
-               BlueprintName = "IAmHungry-tvOSTests"
-               ReferencedContainer = "container:IAmHungry.xcodeproj">
+               BuildableName = "iAmHungry-tvOSTests.xctest"
+               BlueprintName = "iAmHungry-tvOSTests"
+               ReferencedContainer = "container:iAmHungry.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "IAmHungry-tvOSTests.xctest"
-               BlueprintName = "IAmHungry-tvOSTests"
-               ReferencedContainer = "container:IAmHungry.xcodeproj">
+               BuildableName = "iAmHungry-tvOSTests.xctest"
+               BlueprintName = "iAmHungry-tvOSTests"
+               ReferencedContainer = "container:iAmHungry.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "IAmHungry-tvOS.app"
-            BlueprintName = "IAmHungry-tvOS"
-            ReferencedContainer = "container:IAmHungry.xcodeproj">
+            BuildableName = "iAmHungry-tvOS.app"
+            BlueprintName = "iAmHungry-tvOS"
+            ReferencedContainer = "container:iAmHungry.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "IAmHungry-tvOS.app"
-            BlueprintName = "IAmHungry-tvOS"
-            ReferencedContainer = "container:IAmHungry.xcodeproj">
+            BuildableName = "iAmHungry-tvOS.app"
+            BlueprintName = "iAmHungry-tvOS"
+            ReferencedContainer = "container:iAmHungry.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -113,9 +113,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "IAmHungry-tvOS.app"
-            BlueprintName = "IAmHungry-tvOS"
-            ReferencedContainer = "container:IAmHungry.xcodeproj">
+            BuildableName = "iAmHungry-tvOS.app"
+            BlueprintName = "iAmHungry-tvOS"
+            ReferencedContainer = "container:iAmHungry.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

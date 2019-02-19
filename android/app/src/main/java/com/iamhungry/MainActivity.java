@@ -17,7 +17,7 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "IAmHungry";
+        return "iAmHungry";
     }
 
     // for react-native-gesture-handler for android
