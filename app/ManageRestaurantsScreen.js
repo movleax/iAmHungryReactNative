@@ -68,7 +68,6 @@ class ManageRestaurantsScreen extends Component {
 
             <TouchableOpacity
                 activeOpacity={0.7}
-                onPress={this.clickHandler}
                 style={styles.TouchableOpacityStyle}
                 onPress={() => this.props.navigation.navigate('AddRestaurant')}>
                 <Ionicons name={'md-add-circle'} size={50} color={'grey'} style={styles.FloatingButtonStyle}/>
