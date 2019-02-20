@@ -66,6 +66,8 @@ const AppContainer = createAppContainer(createBottomTabNavigator(
 
 
 const initialState = {
+  
+  restaurant_list: [],
   testStr: 'hello',
 }
 
@@ -73,11 +75,13 @@ const reducer = (state = initialState, action) => {
   switch(action.type)
   {
     case 'TEST_ONE':
-    console.log("test_one");
+      console.log("test_one");
       return {testStr:"hello"};
     case 'TEST_TWO':
-    console.log("test_two");
+      console.log("test_two");
       return {testStr:"Heyo"};
+    case 'ADD_RESTAURANT':
+      return {restaurant_list: state.restaurant_list.push(action.payload)};
   }
   return state;
 }
