@@ -1,75 +1,94 @@
 import React, {Component} from 'react';
-import {Text, View, SectionList, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
+import {Text, View, FlatList, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-// test data
-const ClusterData = [
-    {title: 'Cluster1', data: [{name: 'passionate'},{name: 'rousing'},{name: 'confident'},{name: 'boisterous'},{name: 'rowdy'}]},
-    {title: 'Cluster2', data: [{name: 'rollicking'},{name: 'cheerful'},{name: 'fun'},{name: 'sweet'},{name: 'amiable'},{name: 'natured'}]}
-  ]
 
 class ManageRestaurantsScreen extends Component {
     constructor(props){
         super(props)
         this.state = {
           search: false,
-          dataToShow: []
+          dataToShow: [],
+          searchTerm: '',
+          selected: (new Map(): Map<string, boolean>),
         }
       }
     
       componentWillMount(){
-        this.setState({dataToShow: ClusterData})
+        this.setState({dataToShow: this.props.restaurant_list})
+      }
+
+      Refresh(){
+        this.setState({dataToShow:this.props.restaurant_list, searchTerm: ''})
       }
     
       searchUpdated = (term) => {
         let matchedItemsArray = []
         if(term === ''){
-          this.setState({search: false, dataToShow: ClusterData})
+          this.setState({search: false, dataToShow: this.props.restaurant_list, searchTerm: term})
         }else{
-          this.setState({search:true, dataToShow: ClusterData}, function(){
+          this.setState({search:true, dataToShow: this.props.restaurant_list}, function(){
             this.state.dataToShow.map((item) => {
-              if(item.title.includes(term)){
+              if(item.name.includes(term)){
                 matchedItemsArray.push(item)
               }
             })
-            this.setState({dataToShow:matchedItemsArray})
+            this.setState({dataToShow:matchedItemsArray, searchTerm: term})
           })
         }
       }
+
+      _keyExtractor = (item, index) => item.name;
+
+      _onPressItem = (id: string) => {
+        // updater functions are preferred for transactional updates
+        this.setState((state) => {
+          // copy the map rather than modifying state.
+          const selected = new Map(state.selected);
+          selected.set(id, !selected.get(id)); // toggle
+          return {selected};
+        });
+      };
+    
+      _renderItem = ({item}) => (
+        <RestaurantListItem
+          onPressItem={this._onPressItem}
+          selected={!!this.state.selected.get(item.id)}
+
+          name={item.name}
+          address={item.address}
+          hours_weekly={item.hours_weekly}
+          id={item.id}
+          location={item.location}
+          name={item.name}
+          phone={item.phone}
+          price_level={item.price_level}
+          rating={item.rating}
+        />
+      );
     
     render() {
       return (
-        // <SectionList
-        //     renderItem={({item, index, section}) => <Text style={{marginLeft: 5}} key={index}>{item}</Text>}
-        //     renderSectionHeader={({section: {title}}) => (
-        //         <Text style={{fontWeight: 'bold'}}>{title}</Text>
-        //     )}
-        //     sections={[
-        //         {title: 'Title1', data: ['item1','item1','item1','item1','item1','item1','item1', 'item2','item1', 'item2','item1', 'item2','item1', 'item2']},
-        //         {title: 'Title2', data: ['item3','item3','item3','item3','item3','item3','item3', 'item4','item3', 'item4','item3', 'item4','item3', 'item4']},
-        //         {title: 'Title3', data: ['item5','item5','item5','item5','item5', 'item6','item5', 'item6','item5', 'item6','item5', 'item6','item5', 'item6']},
-        //     ]}
-        //     keyExtractor={(item, index) => item + index}
-        // />
-
         <View style={styles.Container}>
             <TextInput 
+            value={this.state.searchTerm}
             onChangeText={(term) => {this.searchUpdated(term)}} 
            // style={styles.searchInput}
-            placeholder="Type a mood to search"/>     
+            placeholder="Search restaurant"/>     
 
-            <SectionList
-            renderItem={({item}) => <Text >{item.name}</Text>}
-            renderSectionHeader={({section}) => <Text>{section.title}</Text>}
-            sections={this.state.dataToShow}
-            keyExtractor={(item, index) => item + index}
+            <FlatList
+              data={this.state.dataToShow}
+              //extraData={this.state}
+              keyExtractor={this._keyExtractor}
+              renderItem={this._renderItem}
             />
 
             <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.TouchableOpacityStyle}
-                onPress={() => this.props.navigation.navigate('AddRestaurant')}>
+                onPress={() => this.props.navigation.navigate('AddRestaurant', {
+                  RefreshParentScreen: () => this.Refresh(),
+                })}>
                 <Ionicons name={'md-add-circle'} size={50} color={'grey'} style={styles.FloatingButtonStyle}/>
             </TouchableOpacity>
 
@@ -77,10 +96,32 @@ class ManageRestaurantsScreen extends Component {
       );
     }
   }
+
+  class RestaurantListItem extends React.PureComponent {
+    _onPress = () => {
+      this.props.onPressItem(this.props.id);
+    };
+  
+    render() {
+      const textColor = this.props.selected ? 'red' : 'black';
+      return (
+        <TouchableOpacity onPress={this._onPress}>
+          <View>
+            <Text style={{color: textColor}}>{this.props.name}</Text>
+            <Text>{this.props.address}</Text>
+            <Text>Phone#: {this.props.phone}</Text>
+            <Text>Hours today: {this.props.hours_weekly[new Date().getDay()]}</Text>
+            <Text>Price: {"$".repeat(this.props.price_level)}</Text>
+            <Text>Rating: ⭐{this.props.rating} / 5</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
+  }
   
 function mapStateToProps(state){
     return {
-        testStr: state.testStr
+      restaurant_list: state.restaurant_list
     }
 }
 
