@@ -67,7 +67,19 @@ const AppContainer = createAppContainer(createBottomTabNavigator(
 
 const initialState = {
   
-  restaurant_list: [],
+  restaurant_list: [
+    {
+      name: "McDonald's",
+      address: "2400 Sunrise Blvd, Rancho Cordova, CA 95670, USA",
+      hours_weekly: ["Monday: 5:00 AM – 12:00 AM", "Tuesday: 5:00 AM – 12:00 AM", "Wednesday: 5:00 AM – 12:00 AM", "Thursday: 5:00 AM – 12:00 AM", "Friday: 5:00 AM – 1:00 AM", "Saturday: 5:00 AM – 1:00 AM", "Sunday: 5:00 AM – 1:00 AM"],
+      id: "ChIJcxJNR4LdmoARHohf4RwJhbM",
+      location: {lat: 38.6151029, lng: -121.2699112},
+      phone: "(916) 635-1991",
+      price_level: 1,
+      rating: 3.3,
+    }
+    
+  ],
   testStr: 'hello',
 }
 
@@ -81,7 +93,7 @@ const reducer = (state = initialState, action) => {
       console.log("test_two");
       return {testStr:"Heyo"};
     case 'ADD_RESTAURANT':
-      return {restaurant_list: state.restaurant_list.push(action.payload)};
+      return {...state, restaurant_list: state.restaurant_list.concat(action.payload)};
   }
   return state;
 }
