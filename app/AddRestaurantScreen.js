@@ -34,9 +34,12 @@ class AddRestaurantScreen extends Component {
                 price_level: details.price_level,
                 rating: details.rating,
                 hours_weekly: details.opening_hours.weekday_text,
+                id: details.place_id,
               }
-
+              
               this.props.addRestaurantEstablishment(restaurantObj);
+              this.props.navigation.state.params.RefreshParentScreen();
+              this.props.navigation.goBack();
             }}
 
             getDefaultValue={() => ''}
