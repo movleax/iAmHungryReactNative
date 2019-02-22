@@ -146,7 +146,7 @@ class ManageRestaurantsScreen extends Component {
               <Text>{this.props.address}</Text>
               <Text>Phone#: {this.props.phone}</Text>
               <Text>Hours today: {this.props.hours_weekly[new Date().getDay()]}</Text>
-              <Text>Price: {"$".repeat(this.props.price_level)}</Text>
+              <Text>Price: {this.props.price_level > 0 ? "$".repeat(this.props.price_level) : 'free'}</Text>
               <Text>Rating: {this.props.rating} / 5</Text>
             </View>
           </TouchableOpacity>
