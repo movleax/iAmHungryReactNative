@@ -29,8 +29,8 @@ class ManageRestaurantsScreen extends Component {
         }else{
           this.setState({search:true, dataToShow: this.props.restaurant_list}, function(){
             this.state.dataToShow.map((item) => {
-              if(item.name.includes(term)){
-                matchedItemsArray.push(item)
+              if(item.name.toLowerCase().includes(term.toLowerCase())){
+                matchedItemsArray.push(item);
               }
             })
             this.setState({dataToShow:matchedItemsArray, searchTerm: term})
@@ -38,9 +38,10 @@ class ManageRestaurantsScreen extends Component {
         }
       }
 
-      _keyExtractor = (item, index) => item.name;
+      _keyExtractor = (item, index) => item.id;
 
       _onPressItem = (id: string) => {
+        console.log(this.state.selected);
         // updater functions are preferred for transactional updates
         this.setState((state) => {
           // copy the map rather than modifying state.
@@ -49,10 +50,31 @@ class ManageRestaurantsScreen extends Component {
           return {selected};
         });
       };
+
+      _onPressRemove = (id: string) => {
+
+        const newRestaurantList = this.props.restaurant_list.filter(restaurant => restaurant.id !== id);
+        const newDataToShow = this.state.dataToShow.filter(restaurant => restaurant.id !== id);
+
+        // updater functions are preferred for transactional updates
+        this.setState((state) => {
+          state.dataToShow = newDataToShow;
+        });
+
+        this.props.removeRestaurant(newRestaurantList);
+
+        this.setState((state) => {
+          // copy the map rather than modifying state.
+          const selected = new Map(state.selected);
+          selected.set(id, false); // set to false
+          return {selected};
+        });
+      };
     
       _renderItem = ({item}) => (
         <RestaurantListItem
           onPressItem={this._onPressItem}
+          onPressRemove={this._onPressRemove}
           selected={!!this.state.selected.get(item.id)}
 
           name={item.name}
@@ -78,7 +100,7 @@ class ManageRestaurantsScreen extends Component {
 
             <FlatList
               data={this.state.dataToShow}
-              //extraData={this.state}
+              extraData={this.state}
               keyExtractor={this._keyExtractor}
               renderItem={this._renderItem}
             />
@@ -98,23 +120,44 @@ class ManageRestaurantsScreen extends Component {
   }
 
   class RestaurantListItem extends React.PureComponent {
-    _onPress = () => {
+    constructor(props)
+    {
+      super(props);
+      this.state = {
+
+      }
+    }
+
+    _onPressItem = () => {
       this.props.onPressItem(this.props.id);
+    };
+
+    _onPressRemove = () => {
+      this.props.onPressRemove(this.props.id);
     };
   
     render() {
-      const textColor = this.props.selected ? 'red' : 'black';
+      const backgroundColor = this.props.selected ? 'lightgray' : 'white';
       return (
-        <TouchableOpacity onPress={this._onPress}>
-          <View>
-            <Text style={{color: textColor}}>{this.props.name}</Text>
-            <Text>{this.props.address}</Text>
-            <Text>Phone#: {this.props.phone}</Text>
-            <Text>Hours today: {this.props.hours_weekly[new Date().getDay()]}</Text>
-            <Text>Price: {"$".repeat(this.props.price_level)}</Text>
-            <Text>Rating: ⭐{this.props.rating} / 5</Text>
-          </View>
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row', backgroundColor: backgroundColor, margin: 5, padding: 5}}>
+          <TouchableOpacity onPress={this._onPressItem}>
+            <View >
+              <Text style={{fontSize: 20, fontWeight: 'bold'}}>{this.props.name}</Text>
+              <Text>{this.props.address}</Text>
+              <Text>Phone#: {this.props.phone}</Text>
+              <Text>Hours today: {this.props.hours_weekly[new Date().getDay()]}</Text>
+              <Text>Price: {"$".repeat(this.props.price_level)}</Text>
+              <Text>Rating: {this.props.rating} / 5</Text>
+            </View>
+          </TouchableOpacity>
+          { this.props.selected &&
+            <TouchableOpacity onPress={this._onPressRemove} style={{position: 'absolute', right:25, top: 35}}>
+              <View>
+                <Ionicons name={'md-trash'} size={50} color={'tomato'} />
+              </View>
+            </TouchableOpacity>
+          }
+        </View>
       );
     }
   }
@@ -127,8 +170,7 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
     return {
-        testFunctionOne: () => dispatch({type:'TEST_ONE'}),
-        testFunctionTwo: () => dispatch({type:'TEST_TWO'}),
+        removeRestaurant: (restaurantArray) => dispatch({type:'REMOVE_RESTAURANT', payload: restaurantArray}),
     }
 }
 
