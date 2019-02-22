@@ -8,7 +8,7 @@
  */
 
 import React, {Component} from 'react';
-import {Text, View} from 'react-native';
+import {Text, View, Button} from 'react-native';
 import {connect} from 'react-redux';
 import Restaurant from './Restaurant';
 import {NavigationEvents} from 'react-navigation'
@@ -21,10 +21,11 @@ class ChooseRestaurantScreen extends Component {
       this.state ={
         restaurantsToDisplay: [],
         displayIndex: 0,
+        reachedEndOfList: false
       }
     }
 
-    _chooseRestaurant()
+    _generateRestaurantList()
     {
       if(this.props.restaurant_list <= 0)
       {
@@ -59,19 +60,36 @@ class ChooseRestaurantScreen extends Component {
         filteredRestaurantList[i] = filteredRestaurantList[randomIndex];
         filteredRestaurantList[randomIndex] = swap;
       }
-      this.setState({restaurantsToDisplay: filteredRestaurantList});
+      this.setState({restaurantsToDisplay: filteredRestaurantList, reachedEndOfList: false});
+    }
+
+    _incrementRestaurantIndex()
+    {
+      if(this.state.displayIndex < this.state.restaurantsToDisplay.length)
+      {
+        this.setState({displayIndex: this.state.displayIndex + 1});
+      }
+      else
+      {
+        this.setState({reachedEndOfList: true});
+      }
+    }
+
+    _chooseRestaurant()
+    {
+
     }
 
     componentDidMount()
     {
-      this._chooseRestaurant();
+      this._generateRestaurantList();
     }
 
     render() {
       return (
         <View >
           <NavigationEvents
-            onWillFocus={() => this._chooseRestaurant()}
+            onWillFocus={() => this._generateRestaurantList()}
           />
           { 
             this.props.restaurant_list.length <= 0 &&
@@ -89,19 +107,31 @@ class ChooseRestaurantScreen extends Component {
           }
           { 
             this.props.restaurant_list.length > 0 && this.state.restaurantsToDisplay.length > 0 &&
-            <Restaurant
-              nameStyle={{fontSize: 20, fontWeight: 'bold'}}
+            <View>
+              <Restaurant
+                nameStyle={{fontSize: 20, fontWeight: 'bold'}}
 
-              name={this.state.restaurantsToDisplay[this.state.displayIndex].name}
-              address={this.state.restaurantsToDisplay[this.state.displayIndex].address}
-              hours_weekly={this.state.restaurantsToDisplay[this.state.displayIndex].hours_weekly}
-              id={this.state.restaurantsToDisplay[this.state.displayIndex].id}
-              location={this.state.restaurantsToDisplay[this.state.displayIndex].location}
-              name={this.state.restaurantsToDisplay[this.state.displayIndex].name}
-              phone={this.state.restaurantsToDisplay[this.state.displayIndex].phone}
-              price_level={this.state.restaurantsToDisplay[this.state.displayIndex].price_level}
-              rating={this.state.restaurantsToDisplay[this.state.displayIndex].rating}
-            />
+                name={this.state.restaurantsToDisplay[this.state.displayIndex].name}
+                address={this.state.restaurantsToDisplay[this.state.displayIndex].address}
+                hours_weekly={this.state.restaurantsToDisplay[this.state.displayIndex].hours_weekly}
+                id={this.state.restaurantsToDisplay[this.state.displayIndex].id}
+                location={this.state.restaurantsToDisplay[this.state.displayIndex].location}
+                name={this.state.restaurantsToDisplay[this.state.displayIndex].name}
+                phone={this.state.restaurantsToDisplay[this.state.displayIndex].phone}
+                price_level={this.state.restaurantsToDisplay[this.state.displayIndex].price_level}
+                rating={this.state.restaurantsToDisplay[this.state.displayIndex].rating}
+              />
+              <View style={{flexDirection: 'row'}}>
+                <Button
+                  title="Not feeling it."
+                  onPress={this._nextIndex}
+                />
+                <Button
+                  title="Let's go!"
+                  onPress={this._incrementRestaurantIndex}
+                />
+              </View>
+            </View>
           }
         </View>
       );
