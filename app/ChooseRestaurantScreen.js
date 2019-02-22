@@ -1,0 +1,125 @@
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ * @flow
+ * @lint-ignore-every XPLATJSCOPYRIGHT1
+ */
+
+import React, {Component} from 'react';
+import {Text, View} from 'react-native';
+import {connect} from 'react-redux';
+import Restaurant from './Restaurant';
+import {NavigationEvents} from 'react-navigation'
+
+
+class ChooseRestaurantScreen extends Component {
+    constructor(props)
+    {
+      super(props);
+      this.state ={
+        restaurantsToDisplay: [],
+        displayIndex: 0,
+      }
+    }
+
+    _chooseRestaurant()
+    {
+      if(this.props.restaurant_list <= 0)
+      {
+          return;
+      }
+
+      // TODO: implement way to search new experiances, where the user has not been to the restaurant
+
+      var filteredRestaurantList = Object.assign({}, this.props.restaurant_list);
+      console.log(filteredRestaurantList);
+      filteredRestaurantList = this.props.restaurant_list.filter(restaurant => restaurant.price_level <= this.props.user_configuration.price_level_max);
+      console.log(filteredRestaurantList);
+      filteredRestaurantList = filteredRestaurantList.filter(restaurant => restaurant.rating >= this.props.user_configuration.avg_rating_min/10); // NOTE: need to divide by 10 because of our rating slider hack. See ConfigurationScreen.js; commit log should also contain info on this.
+      console.log(filteredRestaurantList);
+      // TODO: implement way to filter out search radius using the haversine algorithm below
+        // var R = 6371e3; // earths radius in metres
+        // var radLat1 = lat1.toRadians();
+        // var radLat2 = lat2.toRadians();
+        // var deltaLat = (lat2-lat1).toRadians();
+        // var deltaLon = (lon2-lon1).toRadians();
+        // var a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
+        //         Math.cos(radLat1) * Math.cos(radLat2) *
+        //         Math.sin(deltaLon/2) * Math.sin(deltaLon/2);
+        // var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        // var d = R * c;
+
+      // jumble up the results and store into an array in the component's state. I feel no need to put this into redux store.
+      for(var i=0; i < filteredRestaurantList.length; i++)
+      {
+        var randomIndex = Math.floor((Math.random() * filteredRestaurantList.length));
+        var swap = filteredRestaurantList[i];
+        filteredRestaurantList[i] = filteredRestaurantList[randomIndex];
+        filteredRestaurantList[randomIndex] = swap;
+      }
+      this.setState({restaurantsToDisplay: filteredRestaurantList});
+    }
+
+    componentDidMount()
+    {
+      this._chooseRestaurant();
+    }
+
+    render() {
+      return (
+        <View >
+          <NavigationEvents
+            onWillFocus={() => this._chooseRestaurant()}
+          />
+          { 
+            this.props.restaurant_list.length <= 0 &&
+            <View>
+              <Text>Cannot choose a restaurant because there are none in user's list</Text>
+              <Text>Please goto ManageRestaurants tab and add restaurants</Text>
+            </View>
+          }
+          { 
+            this.props.restaurant_list.length > 0 && this.state.restaurantsToDisplay.length <= 0 &&
+            <View>
+              <Text>No results</Text>
+              <Text>Try changing settings in the Configuration tab</Text>
+            </View>
+          }
+          { 
+            this.props.restaurant_list.length > 0 && this.state.restaurantsToDisplay.length > 0 &&
+            <Restaurant
+              nameStyle={{fontSize: 20, fontWeight: 'bold'}}
+
+              name={this.state.restaurantsToDisplay[this.state.displayIndex].name}
+              address={this.state.restaurantsToDisplay[this.state.displayIndex].address}
+              hours_weekly={this.state.restaurantsToDisplay[this.state.displayIndex].hours_weekly}
+              id={this.state.restaurantsToDisplay[this.state.displayIndex].id}
+              location={this.state.restaurantsToDisplay[this.state.displayIndex].location}
+              name={this.state.restaurantsToDisplay[this.state.displayIndex].name}
+              phone={this.state.restaurantsToDisplay[this.state.displayIndex].phone}
+              price_level={this.state.restaurantsToDisplay[this.state.displayIndex].price_level}
+              rating={this.state.restaurantsToDisplay[this.state.displayIndex].rating}
+            />
+          }
+        </View>
+      );
+    }
+  }
+  
+
+function mapStateToProps(state){
+    return {
+      restaurant_list: state.restaurant_list,
+      user_configuration: state.user_configuration
+    }
+}
+
+function mapDispatchToProps(dispatch){
+    return {
+        
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseRestaurantScreen);
