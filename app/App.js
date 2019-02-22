@@ -78,8 +78,13 @@ const initialState = {
       price_level: 1,
       rating: 3.3,
     }
-    
   ],
+  user_configuration: {
+    search_radius: 25,
+    include_new_user_experiences: true,
+    price_level_max: 3,
+    avg_rating_min: 0
+  },
   testStr: 'hello',
 }
 
@@ -96,6 +101,8 @@ const reducer = (state = initialState, action) => {
       return {...state, restaurant_list: action.payload};
     case 'REMOVE_RESTAURANT':
       return {...state, restaurant_list: action.payload};
+    case 'UPDATE_USER_CONFIGURATION':
+      return {...state, user_configuration: action.payload};
   }
   return state;
 }
