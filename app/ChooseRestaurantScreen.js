@@ -11,7 +11,8 @@ import React, {Component} from 'react';
 import {Text, View, Button} from 'react-native';
 import {connect} from 'react-redux';
 import Restaurant from './Restaurant';
-import {NavigationEvents} from 'react-navigation'
+import {NavigationEvents} from 'react-navigation';
+import { Popup } from 'react-native-map-link';
 
 
 class ChooseRestaurantScreen extends Component {
@@ -21,7 +22,12 @@ class ChooseRestaurantScreen extends Component {
       this.state ={
         restaurantsToDisplay: [],
         displayIndex: 0,
-        reachedEndOfList: false
+        reachedEndOfList: false,
+        isVisible: false,
+        chosenLat: -30,
+        chosenLon: 28,
+        chosenTitle: '',
+        chosenId: '',
       }
     }
 
@@ -77,7 +83,13 @@ class ChooseRestaurantScreen extends Component {
 
     _chooseRestaurant()
     {
-
+      this.setState({
+        isVisible: true, 
+        chosenLat: this.state.restaurantsToDisplay[this.state.displayIndex].location.lat, 
+        chosenLon: this.state.restaurantsToDisplay[this.state.displayIndex].location.lng,
+        chosenTitle: this.state.restaurantsToDisplay[this.state.displayIndex].name,
+        chosenId: this.state.restaurantsToDisplay[this.state.displayIndex].id,
+      });
     }
 
     componentDidMount()
@@ -131,6 +143,25 @@ class ChooseRestaurantScreen extends Component {
                   onPress={() => this._chooseRestaurant()}
                 />
               </View>
+              <Popup
+                isVisible={this.state.isVisible}
+                onCancelPressed={() => this.setState({ isVisible: false })}
+                onAppPressed={() => this.setState({ isVisible: false })}
+                onBackButtonPressed={() => this.setState({ isVisible: false })}
+                modalProps={{ // you can put all react-native-modal props inside.
+                    animationIn: 'slideInUp'
+                }}
+                // appsWhiteList={{ /* Array of apps (apple-maps, google-maps, etc...) that you want
+                // to show in the popup, if is undefined or an empty array it will show all supported apps installed on device.*/}}
+                options={{ /* See `showLocation` method above, this accepts the same options. */ 
+                  title: this.state.chosenTitle,
+                  latitude: this.state.chosenLat,
+                  longitude: this.state.chosenLon,
+                  googlePlaceId: this.state.chosenId,
+                  googleForceLatLon: true,
+                }}
+                // style={{ /* Optional: you can override default style by passing your values. */ }}
+            />
             </View>
           }
         </View>
