@@ -93,7 +93,9 @@ const reducer = (state = initialState, action) => {
       console.log("test_two");
       return {testStr:"Heyo"};
     case 'ADD_RESTAURANT':
-      return {...state, restaurant_list: state.restaurant_list.concat(action.payload)};
+      return {...state, restaurant_list: action.payload};
+    case 'REMOVE_RESTAURANT':
+      return {...state, restaurant_list: action.payload};
   }
   return state;
 }
