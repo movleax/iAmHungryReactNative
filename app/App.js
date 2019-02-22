@@ -10,7 +10,7 @@
 import React, {Component} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './HomeScreen';
-import DetailsScreen from './DetailsScreen';
+import ChooseRestaurantScreen from './ChooseRestaurantScreen';
 import ConfigurationScreen from './ConfigurationScreen';
 import ManageRestaurantsScreen from './ManageRestaurantsScreen';
 import AddRestaurantScreen from './AddRestaurantScreen';
@@ -21,12 +21,11 @@ import {Provider} from 'react-redux';
 import { createStackNavigator, createBottomTabNavigator, createAppContainer } from 'react-navigation';
 const HomeStack = createStackNavigator({
   Home: { screen: HomeScreen },
-  Details: { screen: DetailsScreen },
+  ChooseRestaurant: { screen: ChooseRestaurantScreen },
 });
 
 const ConfigurationStack = createStackNavigator({
   Configuration: { screen: ConfigurationScreen },
-  Details: { screen: DetailsScreen },
 });
 const ManageRestaurantsStack = createStackNavigator({
   ManageRestaurants: {screen: ManageRestaurantsScreen},
@@ -85,7 +84,6 @@ const initialState = {
     price_level_max: 3,
     avg_rating_min: 0
   },
-  testStr: 'hello',
 }
 
 const reducer = (state = initialState, action) => {
