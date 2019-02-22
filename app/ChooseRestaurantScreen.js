@@ -65,7 +65,7 @@ class ChooseRestaurantScreen extends Component {
 
     _incrementRestaurantIndex()
     {
-      if(this.state.displayIndex < this.state.restaurantsToDisplay.length)
+      if(this.state.displayIndex < this.state.restaurantsToDisplay.length-1)
       {
         this.setState({displayIndex: this.state.displayIndex + 1});
       }
@@ -124,11 +124,11 @@ class ChooseRestaurantScreen extends Component {
               <View style={{flexDirection: 'row'}}>
                 <Button
                   title="Not feeling it."
-                  onPress={this._nextIndex}
+                  onPress={() => this._incrementRestaurantIndex()}
                 />
                 <Button
                   title="Let's go!"
-                  onPress={this._incrementRestaurantIndex}
+                  onPress={() => this._chooseRestaurant()}
                 />
               </View>
             </View>
