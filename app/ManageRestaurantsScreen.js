@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Text, View, FlatList, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import ManageRestaurantListItem from './ManageRestaurantListItem';
 
 class ManageRestaurantsScreen extends Component {
     constructor(props){
@@ -72,7 +73,7 @@ class ManageRestaurantsScreen extends Component {
       };
     
       _renderItem = ({item}) => (
-        <RestaurantListItem
+        <ManageRestaurantListItem
           onPressItem={this._onPressItem}
           onPressRemove={this._onPressRemove}
           selected={!!this.state.selected.get(item.id)}
@@ -82,7 +83,6 @@ class ManageRestaurantsScreen extends Component {
           hours_weekly={item.hours_weekly}
           id={item.id}
           location={item.location}
-          name={item.name}
           phone={item.phone}
           price_level={item.price_level}
           rating={item.rating}
@@ -119,49 +119,6 @@ class ManageRestaurantsScreen extends Component {
     }
   }
 
-  class RestaurantListItem extends React.PureComponent {
-    constructor(props)
-    {
-      super(props);
-      this.state = {
-
-      }
-    }
-
-    _onPressItem = () => {
-      this.props.onPressItem(this.props.id);
-    };
-
-    _onPressRemove = () => {
-      this.props.onPressRemove(this.props.id);
-    };
-  
-    render() {
-      const backgroundColor = this.props.selected ? 'lightgray' : 'white';
-      return (
-        <View style={{flexDirection: 'row', backgroundColor: backgroundColor, margin: 5, padding: 5}}>
-          <TouchableOpacity onPress={this._onPressItem}>
-            <View >
-              <Text style={{fontSize: 20, fontWeight: 'bold'}}>{this.props.name}</Text>
-              <Text>{this.props.address}</Text>
-              <Text>Phone#: {this.props.phone}</Text>
-              <Text>Hours today: {this.props.hours_weekly[new Date().getDay()]}</Text>
-              <Text>Price: {this.props.price_level > 0 ? "$".repeat(this.props.price_level) : 'free'}</Text>
-              <Text>Rating: {this.props.rating} / 5</Text>
-            </View>
-          </TouchableOpacity>
-          { this.props.selected &&
-            <TouchableOpacity onPress={this._onPressRemove} style={{position: 'absolute', right:25, top: 35}}>
-              <View>
-                <Ionicons name={'md-trash'} size={50} color={'tomato'} />
-              </View>
-            </TouchableOpacity>
-          }
-        </View>
-      );
-    }
-  }
-  
 function mapStateToProps(state){
     return {
       restaurant_list: state.restaurant_list
