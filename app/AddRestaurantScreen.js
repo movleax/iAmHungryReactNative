@@ -13,6 +13,37 @@ import {connect} from 'react-redux';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 class AddRestaurantScreen extends Component {
+
+    _addRestaurant(restaurantDetails)
+    {
+      // check to see if the restaurant already exists in the store
+      if(this.props.restaurant_list.some(restaurant => restaurant.id === restaurantDetails.place_id))
+      {
+        return;
+      }
+
+      var restaurantObj = {
+        name: restaurantDetails.name,
+        address: restaurantDetails.formatted_address,
+        location: restaurantDetails.geometry.location,
+        phone: restaurantDetails.formatted_phone_number,
+        price_level: restaurantDetails.price_level,
+        rating: restaurantDetails.rating,
+        hours_weekly: restaurantDetails.opening_hours.weekday_text,
+        id: restaurantDetails.place_id,
+      }
+
+      // add this restaurant to the end of the restaurant list prop.
+      const newRestaurantList = this.props.restaurant_list.concat(restaurantObj);
+
+      console.log(newRestaurantList);
+
+      // call our action to update the redux store
+      this.props.addRestaurant(newRestaurantList);
+
+      
+    }
+
     render() {
       return (
         //<View >
@@ -25,19 +56,9 @@ class AddRestaurantScreen extends Component {
             fetchDetails={true}
             renderDescription={row => row.description} // custom description render
             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-              
-              var restaurantObj = {
-                name: details.name,
-                address: details.formatted_address,
-                location: details.geometry.location,
-                phone: details.formatted_phone_number,
-                price_level: details.price_level,
-                rating: details.rating,
-                hours_weekly: details.opening_hours.weekday_text,
-                id: details.place_id,
-              }
-              
-              this.props.addRestaurantEstablishment(restaurantObj);
+              console.log(data);
+              console.log(details);
+              this._addRestaurant(details);
               this.props.navigation.state.params.RefreshParentScreen();
               this.props.navigation.goBack();
             }}
@@ -72,7 +93,7 @@ class AddRestaurantScreen extends Component {
             GooglePlacesSearchQuery={{
             // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
             rankby: 'distance',
-            types: 'food'
+            types: 'restaurant'
             }}
 
             filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
@@ -88,13 +109,14 @@ class AddRestaurantScreen extends Component {
 
 function mapStateToProps(state){
     return {
-        GOOGLE_MAPS_APIKEY: state.GOOGLE_MAPS_APIKEY
+        GOOGLE_MAPS_APIKEY: state.GOOGLE_MAPS_APIKEY,
+        restaurant_list: state.restaurant_list
     }
 }
 
 function mapDispatchToProps(dispatch){
     return {
-        addRestaurantEstablishment: (restaurantObj) => dispatch({type:'ADD_RESTAURANT', payload: restaurantObj}),
+        addRestaurant: (restaurantArray) => dispatch({type:'ADD_RESTAURANT', payload: restaurantArray}),
     }
 }
 
