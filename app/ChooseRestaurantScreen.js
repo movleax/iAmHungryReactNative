@@ -82,6 +82,7 @@ class ChooseRestaurantScreen extends Component {
       else
       {
         this.setState({reachedEndOfList: true});
+        this.setState({displayIndex: 0});
       }
     }
 
