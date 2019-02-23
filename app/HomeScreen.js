@@ -12,6 +12,10 @@ import {Text, View, Button} from 'react-native';
 import {connect} from 'react-redux';
 
 class HomeScreen extends Component {
+  static navigationOptions = {
+    title: 'iAmHungry',
+  };
+
   render() {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

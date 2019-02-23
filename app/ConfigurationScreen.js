@@ -4,6 +4,9 @@ import {connect} from 'react-redux';
 
 
 class ConfigurationScreen extends Component {
+  static navigationOptions = {
+    title: 'Configuration',
+  };
 
     _updateRestaurantExpChoice(newValue)
     {
@@ -38,27 +41,27 @@ class ConfigurationScreen extends Component {
       console.log(this.props);
       return (
         <View>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row', margin: 20}}>
             <Switch
               onValueChange = {value => this._updateRestaurantExpChoice(value)}
               value = {this.props.user_configuration.include_new_user_experiences}
             />
-            <Text>Include new restaurant experiences</Text>
+            <Text> Include new restaurant experiences</Text>
           </View>
-          <View>
-            <Text>
+          <View style={{margin: 20}}>
+            <Text style={{fontWeight:"bold"}}>
               Search Radius: {this.props.user_configuration.search_radius <= 0 ? 1 : this.props.user_configuration.search_radius} mi
             </Text>
             <Slider
               value={this.props.user_configuration.search_radius}
               onValueChange={value => this._updateSearchRadius(value)}
-              maximumValue={25}
+              maximumValue={50}
               minimumValue={0}
               step={5}
             />
           </View>
-          <View>
-            <Text>
+          <View style={{margin: 20}}>
+            <Text style={{fontWeight:"bold"}}>
               Max price level: {this.props.user_configuration.price_level_max > 0 ? "$".repeat(this.props.user_configuration.price_level_max) : 'free'}
             </Text>
             <Slider
@@ -69,8 +72,8 @@ class ConfigurationScreen extends Component {
               step={1}
             />
           </View>
-          <View>
-            <Text>
+          <View style={{margin: 20}}>
+            <Text style={{fontWeight:"bold"}}>
               Average rating minimum: {this.props.user_configuration.avg_rating_min/10} / 5
             </Text>
             <Slider

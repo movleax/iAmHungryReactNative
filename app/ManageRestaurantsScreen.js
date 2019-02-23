@@ -5,6 +5,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ManageRestaurantListItem from './ManageRestaurantListItem';
 
 class ManageRestaurantsScreen extends Component {
+  static navigationOptions = {
+    title: 'Manage Restaurants',
+  };
+
     constructor(props){
         super(props)
         this.state = {

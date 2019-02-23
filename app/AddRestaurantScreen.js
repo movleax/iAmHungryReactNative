@@ -13,6 +13,9 @@ import {connect} from 'react-redux';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 class AddRestaurantScreen extends Component {
+  static navigationOptions = {
+    title: 'Add Restaurant',
+  };
 
     _addRestaurant(restaurantDetails)
     {

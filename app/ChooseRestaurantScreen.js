@@ -16,6 +16,10 @@ import { Popup } from 'react-native-map-link';
 
 
 class ChooseRestaurantScreen extends Component {
+  static navigationOptions = {
+    title: 'Choose a Restaurant',
+  };
+
     constructor(props)
     {
       super(props);
@@ -66,7 +70,7 @@ class ChooseRestaurantScreen extends Component {
         filteredRestaurantList[i] = filteredRestaurantList[randomIndex];
         filteredRestaurantList[randomIndex] = swap;
       }
-      this.setState({restaurantsToDisplay: filteredRestaurantList, reachedEndOfList: false});
+      this.setState({restaurantsToDisplay: filteredRestaurantList, reachedEndOfList: false, displayIndex: 0});
     }
 
     _incrementRestaurantIndex()
@@ -99,7 +103,7 @@ class ChooseRestaurantScreen extends Component {
 
     render() {
       return (
-        <View >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <NavigationEvents
             onWillFocus={() => this._generateRestaurantList()}
           />
@@ -119,9 +123,10 @@ class ChooseRestaurantScreen extends Component {
           }
           { 
             this.props.restaurant_list.length > 0 && this.state.restaurantsToDisplay.length > 0 &&
-            <View>
+            <View style={{margin: 10}}>
               <Restaurant
-                nameStyle={{fontSize: 20, fontWeight: 'bold'}}
+                containerStyle={{marginBottom: 50, marginLeft: 20}}
+                nameStyle={{fontSize: 30, fontWeight: 'bold'}}
 
                 name={this.state.restaurantsToDisplay[this.state.displayIndex].name}
                 address={this.state.restaurantsToDisplay[this.state.displayIndex].address}
@@ -134,15 +139,22 @@ class ChooseRestaurantScreen extends Component {
                 rating={this.state.restaurantsToDisplay[this.state.displayIndex].rating}
               />
               <View style={{flexDirection: 'row'}}>
-                <Button
-                  title="Not feeling it."
-                  onPress={() => this._incrementRestaurantIndex()}
-                />
-                <Button
-                  title="Let's go!"
-                  onPress={() => this._chooseRestaurant()}
-                />
+                <View style={[{width:"45%", margin: 10}]}>
+                  <Button
+                    title="Not feeling it."
+                    onPress={() => this._incrementRestaurantIndex()}
+                  />
+                </View>
+                <View style={[{width:"45%", margin: 10}]}>
+                  <Button
+                    title="Let's go!"
+                    onPress={() => this._chooseRestaurant()}
+                  />
+                </View>
               </View>
+              { this.state.reachedEndOfList &&
+                <Text style={{color:'red'}}>Cycled through list. Consider changing Configuration settings or add more restaurants</Text>
+              }
               <Popup
                 isVisible={this.state.isVisible}
                 onCancelPressed={() => this.setState({ isVisible: false })}
