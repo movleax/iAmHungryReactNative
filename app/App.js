@@ -14,11 +14,12 @@ import ChooseRestaurantScreen from './ChooseRestaurantScreen';
 import ConfigurationScreen from './ConfigurationScreen';
 import ManageRestaurantsScreen from './ManageRestaurantsScreen';
 import AddRestaurantScreen from './AddRestaurantScreen';
+import SignInScreen from './SignInScreen';
+import AuthLoadingScreen from './AuthLoadingScreen';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
+import { createStackNavigator, createBottomTabNavigator, createAppContainer, createSwitchNavigator} from 'react-navigation';
 
-
-import { createStackNavigator, createBottomTabNavigator, createAppContainer } from 'react-navigation';
 const HomeStack = createStackNavigator({
   Home: { screen: HomeScreen },
   ChooseRestaurant: { screen: ChooseRestaurantScreen },
@@ -31,7 +32,7 @@ const ManageRestaurantsStack = createStackNavigator({
   ManageRestaurants: {screen: ManageRestaurantsScreen},
   AddRestaurant: {screen: AddRestaurantScreen},
 }); 
-const AppContainer = createAppContainer(createBottomTabNavigator(
+const AppTabNavigator = createBottomTabNavigator(
   {
     Home: { screen: HomeStack },
     Configuration: { screen: ConfigurationStack },
@@ -60,9 +61,20 @@ const AppContainer = createAppContainer(createBottomTabNavigator(
       inactiveTintColor: 'gray',
     },
   }
+);
+
+const AuthStack = createStackNavigator({ SignIn: SignInScreen });
+
+const AppContainer = createAppContainer(createSwitchNavigator(
+  {
+    AuthLoading: AuthLoadingScreen,
+    App: AppTabNavigator,
+    Auth: AuthStack,
+  },
+  {
+    initialRouteName: 'AuthLoading',
+  }
 ));
-
-
 
 const initialState = {
   

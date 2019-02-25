@@ -8,12 +8,17 @@
  */
 
 import React, {Component} from 'react';
-import {Text, View, Button} from 'react-native';
+import {AsyncStorage, View, Button} from 'react-native';
 import {connect} from 'react-redux';
 
 class HomeScreen extends Component {
   static navigationOptions = {
     title: 'iAmHungry',
+  };
+
+  _signOutAsync = async () => {
+    await AsyncStorage.clear();
+    this.props.navigation.navigate('Auth');
   };
 
   render() {
@@ -24,6 +29,7 @@ class HomeScreen extends Component {
             title="Find me food!"
             onPress={() => this.props.navigation.navigate('ChooseRestaurant')}
           />
+          <Button title="Signout" onPress={this._signOutAsync} />
         </View>
       </View>
     );
