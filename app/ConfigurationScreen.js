@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Text, View, Switch, Slider} from 'react-native';
+import {Text, View, Switch} from 'react-native';
 import {connect} from 'react-redux';
-
+import Slider from '@react-native-community/slider';
 
 class ConfigurationScreen extends Component {
   static navigationOptions = {

@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.2.2",
+    "@react-native-community/slider": "^1.0.4",
     "axios": "^0.18.0",
     "react": "16.6.3",
     "react-native": "^0.59.3",
