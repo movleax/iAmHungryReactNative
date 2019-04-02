@@ -77,7 +77,7 @@ const AppContainer = createAppContainer(createSwitchNavigator(
 ));
 
 const initialState = {
-  
+  GOOGLE_MAPS_APIKEY: 'AIzaSyA70MrmRiL0ows1nDyt87kyH9QOoXXDOf4',
   restaurant_list: [
     {
       name: "McDonald's",
