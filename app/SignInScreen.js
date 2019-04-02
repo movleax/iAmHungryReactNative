@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Button, AsyncStorage} from 'react-native';
+import {View, Button, Text, AsyncStorage} from 'react-native';
 import Loading from './Loading';
 import axios from 'axios';
 
@@ -13,7 +13,8 @@ class SignInScreen extends React.Component {
       super(props);
 
       this.state = {
-        loading: false,
+        isLoading: false,
+        showErrorMsg: false,
       };
     }
   
@@ -21,7 +22,7 @@ class SignInScreen extends React.Component {
     {
       let screenDisplay;
 
-      if(this.state.loading)
+      if(this.state.isLoading)
       {
         screenDisplay = <Loading></Loading>;
       }
@@ -33,29 +34,74 @@ class SignInScreen extends React.Component {
       return (
         <View>
           {screenDisplay}
+          {
+            this.state.showErrorMsg && 
+            <Text style={{color:'red'}}>Error signing in</Text>
+          }
         </View>
       );
+    }
+
+    _retrieveAndStoreJwt(){
+      return new Promise(async resolve=> {
+        let jwt;
+        
+        axios.post("http://192.168.50.101:5000/api/auth/signin",{
+        
+          usernameOrEmail: "testUname",
+          password: "secretpassword"
+        
+        },)
+        .then(async (response) => {
+          // Handle the JWT response here
+          jwt = response.data; 
+          await AsyncStorage.setItem('jwt', jwt.tokenType + " " + jwt.accessToken);
+        })
+        .catch((error) => {
+          // Handle returned errors here
+          resolve(false);
+        });
+
+        resolve(true);
+      });
+    }
+
+    _retrieveAndStoreMapsKey(){
+      return new Promise(async resolve=> {
+        const jwt = await AsyncStorage.getItem('jwt');
+        let mapsApiKey;
+
+        axios.get("http://192.168.50.101:5000/api/maps/key",{
+          headers: { Authorization:  jwt} 
+        },)
+        .then((response) => {
+          mapsApiKey = response.data;
+        })
+        .catch((error) => {
+          resolve(false);
+        });
+
+        resolve(true);
+      });
     }
   
     _signInAsync = async () => {
 
-      axios.post("http://192.168.50.101:5000/api/signin",{
-      user: {
-        username: "email",
-        password: "secretpassword",
-      }
-      },)
-      .then((response) => {
-        // Handle the JWT response here
-        console.log(response);
-      })
-      .catch((error) => {
-        // Handle returned errors here
-        console.log(error);
-      });
+      this.setState({isLoading: true, showErrorMsg: false});
 
-      await AsyncStorage.setItem('userToken', 'abc');
+      if(!await this._retrieveAndStoreJwt()){
+        this.setState({isLoading: false, showErrorMsg: true});
+        return;
+      }
+
+      if(!await this._retrieveAndStoreMapsKey()){
+        this.setState({isLoading: false, showErrorMsg: true});
+        return;
+      }
+
+      this.setState({isLoading: false});
       this.props.navigation.navigate('App');
+      
     };
   }
 
