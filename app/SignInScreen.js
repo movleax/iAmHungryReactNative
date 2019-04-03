@@ -1,7 +1,9 @@
 import React from 'react';
-import {View, Button, Text, AsyncStorage} from 'react-native';
+import {connect} from 'react-redux';
+import {View, Button, Text} from 'react-native';
 import Loading from './Loading';
-import axios from 'axios';
+import ServerCommunication from './ServerCommunication.js';
+
 
 class SignInScreen extends React.Component {
     static navigationOptions = {
@@ -41,60 +43,22 @@ class SignInScreen extends React.Component {
         </View>
       );
     }
-
-    _retrieveAndStoreJwt(){
-      return new Promise(async resolve=> {
-        let jwt;
-        
-        axios.post("http://192.168.50.101:5000/api/auth/signin",{
-        
-          usernameOrEmail: "testUname",
-          password: "secretpassword"
-        
-        },)
-        .then(async (response) => {
-          // Handle the JWT response here
-          jwt = response.data; 
-          await AsyncStorage.setItem('jwt', jwt.tokenType + " " + jwt.accessToken);
-        })
-        .catch((error) => {
-          // Handle returned errors here
-          resolve(false);
-        });
-
-        resolve(true);
-      });
-    }
-
-    _retrieveAndStoreMapsKey(){
-      return new Promise(async resolve=> {
-        const jwt = await AsyncStorage.getItem('jwt');
-        let mapsApiKey;
-
-        axios.get("http://192.168.50.101:5000/api/maps/key",{
-          headers: { Authorization:  jwt} 
-        },)
-        .then((response) => {
-          mapsApiKey = response.data;
-        })
-        .catch((error) => {
-          resolve(false);
-        });
-
-        resolve(true);
-      });
-    }
   
     _signInAsync = async () => {
 
       this.setState({isLoading: true, showErrorMsg: false});
 
-      if(!await this._retrieveAndStoreJwt()){
+      if((await ServerCommunication.RetrieveAndStoreJwt()).status != 200){
         this.setState({isLoading: false, showErrorMsg: true});
         return;
       }
 
-      if(!await this._retrieveAndStoreMapsKey()){
+      if((await ServerCommunication.RetrieveAndStoreMapsKey()).status != 200){
+        this.setState({isLoading: false, showErrorMsg: true});
+        return;
+      }
+
+      if((await ServerCommunication.RetrieveAndStoreRestaurantList()).status != 200){
         this.setState({isLoading: false, showErrorMsg: true});
         return;
       }
@@ -105,4 +69,16 @@ class SignInScreen extends React.Component {
     };
   }
 
-  export default SignInScreen;
+  function mapStateToProps(state){
+    return {
+        
+    }
+}
+
+  function mapDispatchToProps(dispatch){
+    return {
+        
+    }
+  }
+
+  export default connect(mapStateToProps, mapDispatchToProps)(SignInScreen);
