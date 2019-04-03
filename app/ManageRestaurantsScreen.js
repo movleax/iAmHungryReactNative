@@ -3,6 +3,7 @@ import {Text, View, FlatList, TextInput, TouchableOpacity, StyleSheet} from 'rea
 import {connect} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ManageRestaurantListItem from './ManageRestaurantListItem';
+import ServerCommunication from './ServerCommunication';
 
 class ManageRestaurantsScreen extends Component {
   static navigationOptions = {
@@ -61,6 +62,8 @@ class ManageRestaurantsScreen extends Component {
         const newRestaurantList = this.props.restaurant_list.filter(restaurant => restaurant.id !== id);
         const newDataToShow = this.state.dataToShow.filter(restaurant => restaurant.id !== id);
 
+        this._removeRestaurantFromServer(id);
+
         // updater functions are preferred for transactional updates
         this.setState((state) => {
           state.dataToShow = newDataToShow;
@@ -75,6 +78,13 @@ class ManageRestaurantsScreen extends Component {
           return {selected};
         });
       };
+
+      async _removeRestaurantFromServer(id) {
+
+        await ServerCommunication.DeleteRestaurantFromServer(id);
+
+        await ServerCommunication.RetrieveAndStoreRestaurantList();
+      }
     
       _renderItem = ({item}) => (
         <ManageRestaurantListItem

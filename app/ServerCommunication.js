@@ -13,13 +13,15 @@ class ServerCommunication{
     static async DeleteRestaurantFromServer(restaurantId){
         const jwt = await AsyncStorage.getItem('jwt');
 
-        const response = await axios.post("http://192.168.50.101:5000/api/restaurant/remove",{
-            id: restaurantId,
-        },{
+        const response = await axios.delete("http://192.168.50.101:5000/api/restaurant/remove",{
+            
             headers: {
-            'Content-Type': 'application/json',
-            Authorization:  jwt,
-        }
+                'Content-Type': 'application/json',
+                Authorization:  jwt,
+            },
+            data:{
+                id: restaurantId,
+            }
         })
         .then(async (response) => {
             return response;
