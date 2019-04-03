@@ -9,14 +9,32 @@ class ServerCommunication{
     constructor(){
 
     }
-    _PostRestaurantToServer(restaurantDetails){
-        return new Promise(async (resolve, reject)=> {
-          const jwt = await AsyncStorage.getItem('jwt');
-          console.log("IN _PostRestaurantToServer");
-          console.log(jwt);
-          //console.log(JSON.stringify(restaurantObj));
-          axios.post("http://192.168.50.101:5000/api/restaurant/add",{
-            
+
+    static async DeleteRestaurantFromServer(restaurantId){
+        const jwt = await AsyncStorage.getItem('jwt');
+
+        const response = await axios.post("http://192.168.50.101:5000/api/restaurant/remove",{
+            id: restaurantId,
+        },{
+            headers: {
+            'Content-Type': 'application/json',
+            Authorization:  jwt,
+        }
+        })
+        .then(async (response) => {
+            return response;
+        })
+        .catch((error) => {
+            return error;
+        });
+
+        return response;
+    }
+    
+    static async PostRestaurantToServer(restaurantDetails){
+        const jwt = await AsyncStorage.getItem('jwt');
+
+        const response = await axios.post("http://192.168.50.101:5000/api/restaurant/add",{
             name: restaurantDetails.name,
             address: restaurantDetails.formatted_address,
             location: restaurantDetails.geometry.location,
@@ -25,26 +43,21 @@ class ServerCommunication{
             rating: restaurantDetails.rating,
             hours_weekly: restaurantDetails.opening_hours.weekday_text,
             id: restaurantDetails.place_id,
-              
-          },{
-              headers: {
-              'Content-Type': 'application/json',
-              Authorization:  jwt,
-            }
-          })
-          .then(async (response) => {
-            // Handle the JWT response here
-            console.log(response);
-          })
-          .catch((error) => {
-            // Handle returned errors here
-            console.log(error);
-            reject(false);
-          });
-    
-          resolve(true);
+        },{
+            headers: {
+            'Content-Type': 'application/json',
+            Authorization:  jwt,
+        }
+        })
+        .then(async (response) => {
+            return response;
+        })
+        .catch((error) => {
+            return error;
         });
-      }
+
+        return response;
+    }
 
     static async RetrieveAndStoreJwt(){
         let jwt;
@@ -112,17 +125,5 @@ class ServerCommunication{
 
 }
 
-function mapStateToProps(state){
-    return {
-        
-    }
-}
 
-  function mapDispatchToProps(dispatch){
-    return {
-        setMapsApiKey: (mapsApiKey) => dispatch({type:'SET_MAPS_API_KEY', payload: mapsApiKey}),
-        setRestaurantsList: (restaurantsList) => dispatch({type:'SET_RESTAURANT_LIST', payload: restaurantsList}),
-    }
-  }
-
-export default ServerCommunication;//connect(mapStateToProps, mapDispatchToProps)(ServerCommunication);
+export default ServerCommunication;
