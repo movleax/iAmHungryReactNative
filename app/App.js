@@ -16,6 +16,7 @@ import ManageRestaurantsScreen from './ManageRestaurantsScreen';
 import AddRestaurantScreen from './AddRestaurantScreen';
 import SignInScreen from './SignInScreen';
 import AuthLoadingScreen from './AuthLoadingScreen';
+import ProfileScreen from './ProfileScreen';
 import {Provider} from 'react-redux';
 import store from './store/store'
 import { createStackNavigator, createBottomTabNavigator, createAppContainer, createSwitchNavigator} from 'react-navigation';
@@ -31,12 +32,16 @@ const ConfigurationStack = createStackNavigator({
 const ManageRestaurantsStack = createStackNavigator({
   ManageRestaurants: {screen: ManageRestaurantsScreen},
   AddRestaurant: {screen: AddRestaurantScreen},
-}); 
+});
+const ProfileStack = createStackNavigator({
+  Profile: { screen: ProfileScreen },
+});
 const AppTabNavigator = createBottomTabNavigator(
   {
     Home: { screen: HomeStack },
     Configuration: { screen: ConfigurationStack },
     ManageRestaurants: {screen: ManageRestaurantsStack},
+    Profile: {screen: ProfileStack}
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -49,6 +54,8 @@ const AppTabNavigator = createBottomTabNavigator(
           iconName = `md-settings`;
         } else if (routeName === 'ManageRestaurants') {
           iconName = `md-business`;
+        }else if (routeName === 'Profile') {
+          iconName = `md-person`;
         }
 
         // You can return any component that you like here! We usually use an
