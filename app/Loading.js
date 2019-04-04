@@ -11,8 +11,7 @@ class Loading extends React.Component {
     render() {
       return (
         <View>
-          <ActivityIndicator />
-          <StatusBar barStyle="default" />
+          <ActivityIndicator size="large" />
         </View>
       );
     }
