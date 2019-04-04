@@ -1,5 +1,3 @@
-import React from 'react';
-import {connect} from 'react-redux';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import store from './store/store';
@@ -9,6 +7,27 @@ class ServerCommunication{
     constructor(){
 
     }
+
+    static async RequestSignUp(email, username, password){
+
+      const response = await axios.post("http://192.168.50.101:5000/api/auth/signup",{
+        email: email,
+        username: username,
+        password: password
+      
+      },)
+      .then((response) => {
+        // Handle the JWT response here
+        jwt = response.data; 
+        return response;
+      })
+      .catch((error) => {
+        // Handle returned errors here
+        return error;
+      });
+
+      return response;
+  }
 
     static async DeleteRestaurantFromServer(restaurantId){
         const jwt = await AsyncStorage.getItem('jwt');
@@ -61,13 +80,13 @@ class ServerCommunication{
         return response;
     }
 
-    static async RetrieveAndStoreJwt(){
+    static async RetrieveAndStoreJwt(userNameOrEmail, password){
         let jwt;
 
         const response = await axios.post("http://192.168.50.101:5000/api/auth/signin",{
         
-          usernameOrEmail: "testUname",
-          password: "secretpassword"
+          usernameOrEmail: userNameOrEmail,
+          password: password
         
         },)
         .then((response) => {
