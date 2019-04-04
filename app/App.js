@@ -15,6 +15,7 @@ import ConfigurationScreen from './ConfigurationScreen';
 import ManageRestaurantsScreen from './ManageRestaurantsScreen';
 import AddRestaurantScreen from './AddRestaurantScreen';
 import SignInScreen from './SignInScreen';
+import SignUpScreen from './SignUpScreen';
 import AuthLoadingScreen from './AuthLoadingScreen';
 import ProfileScreen from './ProfileScreen';
 import {Provider} from 'react-redux';
@@ -70,7 +71,7 @@ const AppTabNavigator = createBottomTabNavigator(
   }
 );
 
-const AuthStack = createStackNavigator({ SignIn: SignInScreen });
+const AuthStack = createStackNavigator({ SignIn: SignInScreen, SignUp: SignUpScreen });
 
 const AppContainer = createAppContainer(createSwitchNavigator(
   {
