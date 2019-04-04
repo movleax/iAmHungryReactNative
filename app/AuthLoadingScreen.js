@@ -6,20 +6,29 @@ import ServerCommunication from './ServerCommunication';
 class AuthLoadingScreen extends React.Component {
     constructor() {
       super();
-      this._bootstrapAsync();
     }
 
     componentDidMount(){
-      this.requestCameraPermission();
+      this.requestLocationPermission();
+      this._bootstrapAsync();
     }
   
-    // Fetch the token from storage then navigate to our appropriate place
+    // Fetch fetch user data from the server then navigate to our appropriate place
     _bootstrapAsync = async () => {
-      const response = await ServerCommunication.RetrieveAndStoreMapsKey();
+
+      if((await ServerCommunication.RetrieveAndStoreMapsKey()).status != 200){
+        this.props.navigation.navigate('Auth');
+        return;
+      }
+
+      if((await ServerCommunication.RetrieveAndStoreRestaurantList()).status != 200){
+        this.props.navigation.navigate('Auth');
+        return;
+      }
   
-      // This will switch to the App screen or Auth screen and this loading
+      // This will switch to the App screen
       // screen will be unmounted and thrown away.
-      this.props.navigation.navigate(response.status == 200 ? 'App' : 'Auth');
+      this.props.navigation.navigate('App');
     };
   
     // Render any loading content that you like here
@@ -31,7 +40,7 @@ class AuthLoadingScreen extends React.Component {
       );
     }
 
-    async requestCameraPermission() {
+    async requestLocationPermission() {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
