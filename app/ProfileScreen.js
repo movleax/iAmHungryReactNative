@@ -9,7 +9,7 @@ class ProfileScreen extends Component {
     };
 
     _signOutAsync = async () => {
-        await AsyncStorage.clear();
+        await AsyncStorage.removeItem("jwt");
         this.props.navigation.navigate('Auth');
     };
 
