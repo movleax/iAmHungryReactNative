@@ -140,7 +140,7 @@ class SignUpScreen extends React.Component {
             this.setState({showErrorMsg:true, errorMsg: "Passwords do not match!", password: "", passwordRetype: ""})
             return;
         }
-
+        
         this._signUpAsync();
     }
 
@@ -182,7 +182,7 @@ class SignUpScreen extends React.Component {
       this.setState({isLoading: true});
 
       let response = await ServerCommunication.RequestSignUp(this.state.email, this.state.userName, this.state.password);
-      if(response.status != 200){
+      if(response.status != 201){
         this.setState({isLoading: false, showErrorMsg: true, errorMsg: response.message, password: "", passwordRetype: ""});
         return;
       }
