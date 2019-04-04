@@ -7,7 +7,7 @@ import ServerCommunication from './ServerCommunication.js';
 
 class SignInScreen extends React.Component {
     static navigationOptions = {
-      title: 'Please sign in',
+      title: 'iAmHungry Sign In',
     };
 
     constructor(props)
@@ -38,7 +38,7 @@ class SignInScreen extends React.Component {
               style={{margin: 5, height: 40, borderColor: 'gray', borderWidth: 1}}
               onChangeText={(text) => this.setState({userName:text})}
               value={this.state.userName}
-              placeholder={"User name"}
+              placeholder={"User name or Email"}
               placeholderTextColor={'gray'}
             />
             <TextInput
@@ -47,8 +47,10 @@ class SignInScreen extends React.Component {
               value={this.state.password}
               placeholder={"Password"}
               placeholderTextColor={'gray'}
+              secureTextEntry={true}
             />
             <Button title="Sign in!" onPress={this._signInAsync} />
+            <Text style={{top:20, color: "blue"}} onPress={() => {this._signUp()}}>Sign up</Text>
           </View>
         );
       }
@@ -70,7 +72,7 @@ class SignInScreen extends React.Component {
 
       this.setState({isLoading: true, showErrorMsg: false});
 
-      if((await ServerCommunication.RetrieveAndStoreJwt()).status != 200){
+      if((await ServerCommunication.RetrieveAndStoreJwt(this.state.userName, this.state.password)).status != 200){
         this.setState({isLoading: false, showErrorMsg: true});
         return;
       }
@@ -89,7 +91,12 @@ class SignInScreen extends React.Component {
       this.props.navigation.navigate('App');
       
     };
-  }
+
+    _signUp()
+    {
+      this.props.navigation.navigate('SignUp');
+    }
+}
 
   function mapStateToProps(state){
     return {
