@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {View, Button, Text} from 'react-native';
+import {View, Button, Text, TextInput} from 'react-native';
 import Loading from './Loading';
 import ServerCommunication from './ServerCommunication.js';
 
@@ -17,6 +17,8 @@ class SignInScreen extends React.Component {
       this.state = {
         isLoading: false,
         showErrorMsg: false,
+        userName: "",
+        password: "",
       };
     }
   
@@ -30,16 +32,36 @@ class SignInScreen extends React.Component {
       }
       else
       {
-        screenDisplay = <Button title="Sign in!" onPress={this._signInAsync} />;
+        screenDisplay = (
+          <View>
+            <TextInput
+              style={{margin: 5, height: 40, borderColor: 'gray', borderWidth: 1}}
+              onChangeText={(text) => this.setState({userName:text})}
+              value={this.state.userName}
+              placeholder={"User name"}
+              placeholderTextColor={'gray'}
+            />
+            <TextInput
+              style={{margin: 5, height: 40, borderColor: 'gray', borderWidth: 1}}
+              onChangeText={(text) => this.setState({password:text})}
+              value={this.state.password}
+              placeholder={"Password"}
+              placeholderTextColor={'gray'}
+            />
+            <Button title="Sign in!" onPress={this._signInAsync} />
+          </View>
+        );
       }
 
       return (
-        <View>
-          {screenDisplay}
-          {
-            this.state.showErrorMsg && 
-            <Text style={{color:'red'}}>Error signing in</Text>
-          }
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={[{width:"65%"}]}>
+            {screenDisplay}
+            {
+              this.state.showErrorMsg && 
+              <Text style={{color:'red'}}>Error signing in</Text>
+            }
+          </View>
         </View>
       );
     }
