@@ -49,7 +49,7 @@ class SignInScreen extends React.Component {
               placeholderTextColor={'gray'}
               secureTextEntry={true}
             />
-            <Button title="Sign in!" onPress={this._signInAsync} />
+            <Button title="Sign in!" onPress={() => {this._signIn()}} />
             <Text style={{top:20, color: "blue"}} onPress={() => {this._signUp()}}>Sign up</Text>
           </View>
         );
@@ -58,14 +58,32 @@ class SignInScreen extends React.Component {
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <View style={[{width:"65%"}]}>
-            {screenDisplay}
             {
               this.state.showErrorMsg && 
-              <Text style={{color:'red'}}>Error signing in</Text>
+              <Text style={{color:'red'}}>{this.state.errorMsg}</Text>
             }
+            {screenDisplay}
           </View>
         </View>
       );
+    }
+
+    _signIn()
+    {
+
+      if(this.state.userName.length <= 0)
+      {
+        this.setState({showErrorMsg: true, errorMsg: "Username field is blank", password: ""});
+        return;
+      }
+
+      if(this.state.userName.password <= 0)
+      {
+        this.setState({showErrorMsg: true, errorMsg: "Password field is blank"});
+        return;
+      }
+
+      this._signInAsync();
     }
   
     _signInAsync = async () => {
@@ -73,17 +91,17 @@ class SignInScreen extends React.Component {
       this.setState({isLoading: true, showErrorMsg: false});
 
       if((await ServerCommunication.RetrieveAndStoreJwt(this.state.userName, this.state.password)).status != 200){
-        this.setState({isLoading: false, showErrorMsg: true});
+        this.setState({isLoading: false, showErrorMsg: true, errorMsg: "Unable to authenticate. Make sure credentials are correct"});
         return;
       }
 
       if((await ServerCommunication.RetrieveAndStoreMapsKey()).status != 200){
-        this.setState({isLoading: false, showErrorMsg: true});
+        this.setState({isLoading: false, showErrorMsg: true, errorMsg: "Unable to get server data"});
         return;
       }
 
       if((await ServerCommunication.RetrieveAndStoreRestaurantList()).status != 200){
-        this.setState({isLoading: false, showErrorMsg: true});
+        Alert.alert('Data retrieval error', 'Unable to get user data from server', [{text: 'OK', onPress: () => { }}]);
         return;
       }
 

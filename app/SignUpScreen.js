@@ -35,7 +35,6 @@ class SignUpScreen extends React.Component {
     }
 
     _goBack = () =>{
-        console.log("in _goBack()");
         this.setState({
             isLoading: false,
             showErrorMsg: false,
@@ -90,7 +89,7 @@ class SignUpScreen extends React.Component {
               placeholderTextColor={'gray'}
               secureTextEntry={true}
             />
-            <Button title="Register!" onPress={this._signUp} />
+            <Button title="Register!" onPress={() => {this._signUp()}} />
           </View>
         );
       }
@@ -112,13 +111,52 @@ class SignUpScreen extends React.Component {
     {
         this.setState({showErrorMsg: false, errorMsg: ""});
 
-        if(!_checkPasswordsMatch())
+        if(this.state.email.length <= 0)
         {
-            this.setState({showErrorMsg:true, errorMsg: "Password do not match!", password: "", passwordRetype: ""})
+            this.setState({showErrorMsg:true, errorMsg: "Email field cannot be blank", password: "", passwordRetype: ""})
             return;
         }
 
-        _signUpAsync();
+        if(!this._checkEmailFormat())
+        {
+            this.setState({showErrorMsg:true, errorMsg: "Invalid email format", password: "", passwordRetype: ""})
+            return;
+        }
+
+        if(this.state.userName.length <= 0)
+        {
+            this.setState({showErrorMsg:true, errorMsg: "Username field cannot be blank", password: "", passwordRetype: ""})
+            return;
+        }
+
+        if(this.state.password.length < 6)
+        {
+            this.setState({showErrorMsg:true, errorMsg: "Password must be between 6 and 20 characters", password: "", passwordRetype: ""})
+            return;
+        }
+
+        if(!this._checkPasswordsMatch())
+        {
+            this.setState({showErrorMsg:true, errorMsg: "Passwords do not match!", password: "", passwordRetype: ""})
+            return;
+        }
+
+        this._signUpAsync();
+    }
+
+    _checkEmailFormat()
+    {
+        if(this.state.email.length > 64)
+        {
+            return false;
+        }
+
+        if(this.state.email.search(/^(([a-zA-Z0-9]|(!|#|\$|%|&|'|\*|\+|-|\/|=|\?|\^|_|`|\{|\||\}|~|\)))+\.?)+@((([a-zA-Z0-9])+)\-?)+\.([a-zA-Z])+$/) < 0)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     _checkPasswordsMatch()
