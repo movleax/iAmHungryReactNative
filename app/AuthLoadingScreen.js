@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, PermissionsAndroid} from 'react-native';
 import Loading from './Loading';
 import ServerCommunication from './ServerCommunication';
 
@@ -7,6 +7,10 @@ class AuthLoadingScreen extends React.Component {
     constructor() {
       super();
       this._bootstrapAsync();
+    }
+
+    componentDidMount(){
+      this.requestCameraPermission();
     }
   
     // Fetch the token from storage then navigate to our appropriate place
@@ -25,6 +29,29 @@ class AuthLoadingScreen extends React.Component {
           <Loading/>
         </View>
       );
+    }
+
+    async requestCameraPermission() {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'iAmHungry Location Permission',
+            message:
+              "iAmHungry application uses phone location for Google's maps service in order to search for establishments",
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          
+        } else {
+          
+        }
+      } catch (err) {
+        console.warn(err);
+      }
     }
   }
 
