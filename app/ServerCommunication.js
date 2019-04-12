@@ -5,12 +5,17 @@ import store from './store/store';
 class ServerCommunication{
 
     constructor(){
+      
+    }
 
+    static getServerUrl()
+    {
+      return "http://192.168.50.101:5000";
     }
 
     static async RequestSignUp(email, username, password){
 
-      const response = await axios.post("http://192.168.50.101:5000/api/auth/signup",{
+      const response = await axios.post(this.getServerUrl() + "/api/auth/signup",{
         email: email,
         username: username,
         password: password
@@ -32,7 +37,7 @@ class ServerCommunication{
     static async DeleteRestaurantFromServer(restaurantId){
         const jwt = await AsyncStorage.getItem('jwt');
 
-        const response = await axios.delete("http://192.168.50.101:5000/api/restaurant/remove",{
+        const response = await axios.delete(this.getServerUrl() + "/api/restaurant/remove",{
             
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +60,7 @@ class ServerCommunication{
     static async PostRestaurantToServer(restaurantDetails){
         const jwt = await AsyncStorage.getItem('jwt');
 
-        const response = await axios.post("http://192.168.50.101:5000/api/restaurant/add",{
+        const response = await axios.post(this.getServerUrl() + "/api/restaurant/add",{
             name: restaurantDetails.name,
             address: restaurantDetails.formatted_address,
             location: restaurantDetails.geometry.location,
@@ -82,8 +87,8 @@ class ServerCommunication{
 
     static async RetrieveAndStoreJwt(userNameOrEmail, password){
         let jwt;
-
-        const response = await axios.post("http://192.168.50.101:5000/api/auth/signin",{
+        
+        const response = await axios.post(this.getServerUrl() + "/api/auth/signin",{
         
           usernameOrEmail: userNameOrEmail,
           password: password
@@ -106,7 +111,7 @@ class ServerCommunication{
     static async RetrieveAndStoreMapsKey(){
         const jwt = await AsyncStorage.getItem('jwt');
 
-        const response = await axios.get("http://192.168.50.101:5000/api/maps/key",{
+        const response = await axios.get(this.getServerUrl() + "/api/maps/key",{
           headers: {
             'Content-Type': 'application/json',
             Authorization:  jwt,
@@ -126,7 +131,7 @@ class ServerCommunication{
     static async RetrieveAndStoreRestaurantList(){
         const jwt = await AsyncStorage.getItem('jwt');
         
-        const response = await axios.get("http://192.168.50.101:5000/api/restaurant/getlist",{
+        const response = await axios.get(this.getServerUrl() + "/api/restaurant/getlist",{
           headers: {
             'Content-Type': 'application/json',
             Authorization:  jwt,
