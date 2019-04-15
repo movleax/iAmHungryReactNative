@@ -18,6 +18,7 @@ const initialState = {
       price_level_max: 3,
       avg_rating_min: 0
     },
+    currentLocation: {lat: 37.76999, lng: -122.44696},
   }
 
 
@@ -40,6 +41,8 @@ const reducer = (state = initialState, action) => {
         return {...state, GOOGLE_MAPS_APIKEY: action.payload};
       case 'SET_RESTAURANT_LIST':
         return {...state, restaurant_list: action.payload};
+      case 'SET_CURRENT_LOCATION':
+        return {...state, currentLocation: action.payload};
     }
     return state;
   }

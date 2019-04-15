@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 import Restaurant from './Restaurant';
 import {NavigationEvents} from 'react-navigation';
 import { Popup } from 'react-native-map-link';
-
+import haversine from 'haversine';
 
 class ChooseRestaurantScreen extends Component {
   static navigationOptions = {
@@ -50,6 +50,18 @@ class ChooseRestaurantScreen extends Component {
       console.log(filteredRestaurantList);
       filteredRestaurantList = filteredRestaurantList.filter(restaurant => restaurant.rating >= this.props.user_configuration.avg_rating_min/10); // NOTE: need to divide by 10 because of our rating slider hack. See ConfigurationScreen.js; commit log should also contain info on this.
       console.log(filteredRestaurantList);
+
+      const start = {
+        latitude: 30.849635,
+        longitude: -83.24559
+      }
+      
+      const end = {
+        latitude: 27.950575,
+        longitude: -82.457178
+      }
+
+      console.log(haversine(start, end, {unit: 'meter'}))
       // TODO: implement way to filter out search radius using the haversine algorithm below
         // var R = 6371e3; // earths radius in metres
         // var radLat1 = lat1.toRadians();
@@ -186,7 +198,8 @@ class ChooseRestaurantScreen extends Component {
 function mapStateToProps(state){
     return {
       restaurant_list: state.restaurant_list,
-      user_configuration: state.user_configuration
+      user_configuration: state.user_configuration,
+      currentLocation: state.currentLocation,
     }
 }
 
