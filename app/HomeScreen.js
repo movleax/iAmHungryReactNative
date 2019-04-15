@@ -10,6 +10,7 @@
 import React, {Component} from 'react';
 import {View, Button} from 'react-native';
 import {connect} from 'react-redux';
+import CurrentLocation from './CurrentLocation';
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -24,6 +25,7 @@ class HomeScreen extends Component {
             title="Find me food!"
             onPress={() => this.props.navigation.navigate('ChooseRestaurant')}
           />
+          <CurrentLocation/>
         </View>
       </View>
     );
