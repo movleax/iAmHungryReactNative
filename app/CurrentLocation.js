@@ -13,18 +13,15 @@ class CurrentLocation extends Component{
     }
 
     componentDidMount() {
-      console.log("componenet mount CurrentLocation");
       AppState.addEventListener('change', this._handleAppStateChange);
       this.setCurrentLocation();
     }
     
     componentWillUnmount() {
-      console.log("componenet UnMount CurrentLocation");
       AppState.removeEventListener('change', this._handleAppStateChange);
     }
   
     _handleAppStateChange = (nextAppState) => {
-      console.log("_handleAppStateChange CurrentLocation");
       if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
         this.setCurrentLocation();
       }
@@ -40,7 +37,6 @@ class CurrentLocation extends Component{
       
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log(position);
           this.props.setCurrentLocation({lat: position.coords.latitude, lng: position.coords.longitude});
         },
         (error) => {
