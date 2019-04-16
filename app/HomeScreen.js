@@ -29,7 +29,6 @@ class HomeScreen extends Component {
     {
       this.props.updateUserConfiguration(user_configuration);
     }
-    console.log("getting user_configuration data at homescreen");
   }
 
   render() {
