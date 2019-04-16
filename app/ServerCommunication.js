@@ -24,11 +24,18 @@ class ServerCommunication{
       .then((response) => {
         // Handle the JWT response here
         jwt = response.data; 
-        return response;
+        response.data.success = true;
+        return response.data;
       })
       .catch((error) => {
         // Handle returned errors here
-        return error;
+        if(!error.response)
+        {
+          error = {...error, response: {data: {message: "Unable to get data from server"}}};
+        }
+
+        error.response.data.success = false;
+        return error.response.data;
       });
 
       return response;
@@ -48,10 +55,17 @@ class ServerCommunication{
             }
         })
         .then(async (response) => {
-            return response;
+          response.data.success = true;
+          return response.data;
         })
         .catch((error) => {
-            return error;
+          if(!error.response)
+          {
+            error = {...error, response: {data: {message: "Unable to get data from server"}}};
+          }
+
+          error.response.data.success = false;
+          return error.response.data;
         });
 
         return response;
@@ -76,10 +90,17 @@ class ServerCommunication{
         }
         })
         .then(async (response) => {
-            return response;
+          response.data.success = true;
+          return response.data;
         })
         .catch((error) => {
-            return error;
+          if(!error.response)
+          {
+            error = {...error, response: {data: {message: "Unable to get data from server"}}};
+          }
+
+          error.response.data.success = false;
+          return error.response.data;
         });
 
         return response;
@@ -97,14 +118,25 @@ class ServerCommunication{
         .then((response) => {
           // Handle the JWT response here
           jwt = response.data; 
-          return response;
+          response.data.success = true;
+          
+          return response.data;
         })
         .catch((error) => {
-          // Handle returned errors here
-          return error;
+          if(!error.response)
+          {
+            error = {...error, response: {data: {message: "Unable to get data from server"}}};
+          }
+
+          error.response.data.success = false;
+          return error.response.data;
         });
 
-        await AsyncStorage.setItem('jwt', jwt.tokenType + " " + jwt.accessToken);
+        if(response.success)
+        {
+          await AsyncStorage.setItem('jwt', jwt.tokenType + " " + jwt.accessToken);
+        }
+        
         return response;
     }
 
@@ -119,10 +151,17 @@ class ServerCommunication{
         },)
         .then((response) => {
           store.dispatch({type:'SET_MAPS_API_KEY', payload: response.data.mapsApiKey});
-          return response;
+          response.data.success = true;
+          return response.data;
         })
         .catch((error) => {
-          return error;
+          if(!error.response)
+          {
+            error = {...error, response: {data: {message: "Unable to get data from server"}}};
+          }
+
+          error.response.data.success = false;
+          return error.response.data;
         });
 
         return response;
@@ -138,12 +177,18 @@ class ServerCommunication{
           }
         },)
         .then((response) => {
-            store.dispatch({type:'SET_RESTAURANT_LIST', payload: response.data})
-
-          return response;
+          store.dispatch({type:'SET_RESTAURANT_LIST', payload: response.data})
+          response.data.success = true;
+          return response.data;
         })
         .catch((error) => {
-          return error;
+          if(!error.response)
+          {
+            error = {...error, response: {data: {message: "Unable to get data from server"}}};
+          }
+
+          error.response.data.success = false;
+          return error.response.data;
         });
 
         return response;
