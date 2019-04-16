@@ -11,11 +11,26 @@ import React, {Component} from 'react';
 import {View, Button} from 'react-native';
 import {connect} from 'react-redux';
 import CurrentLocation from './CurrentLocation';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class HomeScreen extends Component {
   static navigationOptions = {
     title: 'iAmHungry',
   };
+
+  constructor(props){
+    super(props);
+    this._loadUserConfiguration();
+  }
+
+  async _loadUserConfiguration(){
+    const user_configuration = JSON.parse(await AsyncStorage.getItem('user_configuration'));
+    if(user_configuration != null)
+    {
+      this.props.updateUserConfiguration(user_configuration);
+    }
+    console.log("getting user_configuration data at homescreen");
+  }
 
   render() {
     return (
@@ -40,7 +55,7 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
     return {
-        
+      updateUserConfiguration: (newUserConfiguration) => dispatch({type:'UPDATE_USER_CONFIGURATION', payload: newUserConfiguration}),
     }
 }
 
