@@ -11,14 +11,15 @@ class ConfigurationScreen extends Component {
 
   constructor(props){
     super(props);
+    this._blurListener;
   }
 
   componentDidMount() {
-    this.props.navigation.addListener('willBlur', this._onBlur);
+    this._blurListener = this.props.navigation.addListener('willBlur', this._onBlur);
   }
   
   componentWillUnmount() {
-    this.props.navigation.removeListener('willBlur', this._onBlur);
+    this._blurListener.remove();
   }
 
   _onBlur = () => {
