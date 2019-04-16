@@ -8,11 +8,11 @@
  */
 
 import React, {Component} from 'react';
-import {Text, View} from 'react-native';
 import {connect} from 'react-redux';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import ServerCommunication from './ServerCommunication';
 import Loading from './Loading';
+import CurrentLocation from './CurrentLocation';
 
 
 class AddRestaurantScreen extends Component {
@@ -78,7 +78,9 @@ class AddRestaurantScreen extends Component {
       // available options: https://developers.google.com/places/web-service/autocomplete
       key: this.props.GOOGLE_MAPS_APIKEY,
       language: 'en', // language of the results
-      types: 'establishment' // default: 'geocode'
+      types: 'establishment', // default: 'geocode'
+      location: this.props.currentLocation.lat + "," + this.props.currentLocation.lng,
+      radius: 50,
       }}
 
       styles={{
@@ -93,23 +95,25 @@ class AddRestaurantScreen extends Component {
       }
       }}
 
-      currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
+      currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
       currentLocationLabel="Current location"
-      nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+      nearbyPlacesAPI='None' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
       GoogleReverseGeocodingQuery={{
       // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
       }}
       GooglePlacesSearchQuery={{
       // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
       rankby: 'distance',
-      types: 'restaurant'
+      types: 'food',
       }}
 
       filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
       predefinedPlaces={[]}
 
       debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-      />
+      >
+        <CurrentLocation/>
+      </GooglePlacesAutocomplete>
     );
   }
 }
@@ -118,7 +122,8 @@ class AddRestaurantScreen extends Component {
 function mapStateToProps(state){
     return {
         GOOGLE_MAPS_APIKEY: state.GOOGLE_MAPS_APIKEY,
-        restaurant_list: state.restaurant_list
+        restaurant_list: state.restaurant_list,
+        currentLocation: state.currentLocation,
     }
 }
 

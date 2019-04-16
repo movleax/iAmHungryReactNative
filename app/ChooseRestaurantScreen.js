@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 import Restaurant from './Restaurant';
 import {NavigationEvents} from 'react-navigation';
 import { Popup } from 'react-native-map-link';
-
+import haversine from 'haversine';
 
 class ChooseRestaurantScreen extends Component {
   static navigationOptions = {
@@ -50,17 +50,20 @@ class ChooseRestaurantScreen extends Component {
       console.log(filteredRestaurantList);
       filteredRestaurantList = filteredRestaurantList.filter(restaurant => restaurant.rating >= this.props.user_configuration.avg_rating_min/10); // NOTE: need to divide by 10 because of our rating slider hack. See ConfigurationScreen.js; commit log should also contain info on this.
       console.log(filteredRestaurantList);
-      // TODO: implement way to filter out search radius using the haversine algorithm below
-        // var R = 6371e3; // earths radius in metres
-        // var radLat1 = lat1.toRadians();
-        // var radLat2 = lat2.toRadians();
-        // var deltaLat = (lat2-lat1).toRadians();
-        // var deltaLon = (lon2-lon1).toRadians();
-        // var a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
-        //         Math.cos(radLat1) * Math.cos(radLat2) *
-        //         Math.sin(deltaLon/2) * Math.sin(deltaLon/2);
-        // var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        // var d = R * c;
+      filteredRestaurantList = filteredRestaurantList.filter((restaurant) => {
+        const start = {
+          latitude: this.props.currentLocation.lat,
+          longitude: this.props.currentLocation.lng
+        }
+        
+        const end = {
+          latitude: restaurant.location.lat,
+          longitude:restaurant.location.lng
+        }
+
+        return haversine(start, end, {unit: this.props.unitOfDistance}) <= this.props.user_configuration.search_radius;
+      });
+      console.log(filteredRestaurantList);
 
       // jumble up the results and store into an array in the component's state. I feel no need to put this into redux store.
       for(var i=0; i < filteredRestaurantList.length; i++)
@@ -186,7 +189,9 @@ class ChooseRestaurantScreen extends Component {
 function mapStateToProps(state){
     return {
       restaurant_list: state.restaurant_list,
-      user_configuration: state.user_configuration
+      user_configuration: state.user_configuration,
+      currentLocation: state.currentLocation,
+      unitOfDistance: state.unitOfDistance,
     }
 }
 
