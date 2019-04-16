@@ -46,7 +46,7 @@ class ChooseRestaurantScreen extends Component {
 
       var filteredRestaurantList = Object.assign({}, this.props.restaurant_list);
       console.log(filteredRestaurantList);
-      filteredRestaurantList = this.props.restaurant_list.filter(restaurant => restaurant.price_level <= this.props.user_configuration.price_level_max);
+      filteredRestaurantList = this.props.restaurant_list.filter(restaurant => (restaurant.price_level >= this.props.user_configuration.price_level_min && restaurant.price_level <= this.props.user_configuration.price_level_max));
       console.log(filteredRestaurantList);
       filteredRestaurantList = filteredRestaurantList.filter(restaurant => restaurant.rating >= this.props.user_configuration.avg_rating_min/10); // NOTE: need to divide by 10 because of our rating slider hack. See ConfigurationScreen.js; commit log should also contain info on this.
       console.log(filteredRestaurantList);
