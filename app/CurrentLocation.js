@@ -1,6 +1,7 @@
 import {Component} from 'react';
 import {AppState} from 'react-native';
 import {connect} from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class CurrentLocation extends Component{
 
@@ -28,7 +29,14 @@ class CurrentLocation extends Component{
       this.setState({appState: nextAppState});
     };
 
-    setCurrentLocation = () => {
+    setCurrentLocation = async () => {
+
+      const lastLocation = JSON.parse(await AsyncStorage.getItem('location'));
+      if(lastLocation != null)
+      {
+        this.props.setCurrentLocation(lastLocation);
+      }
+
       let options = {
         enableHighAccuracy: true,
         timeout: 20000,
@@ -36,8 +44,9 @@ class CurrentLocation extends Component{
       };
       
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           this.props.setCurrentLocation({lat: position.coords.latitude, lng: position.coords.longitude});
+          await AsyncStorage.setItem('location', JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude}));
         },
         (error) => {
           alert(error.message);
