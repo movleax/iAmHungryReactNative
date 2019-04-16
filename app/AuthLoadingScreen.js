@@ -16,12 +16,12 @@ class AuthLoadingScreen extends React.Component {
     // Fetch fetch user data from the server then navigate to our appropriate place
     _bootstrapAsync = async () => {
 
-      if((await ServerCommunication.RetrieveAndStoreMapsKey()).status != 200){
+      if((await ServerCommunication.RetrieveAndStoreMapsKey()).success == false){
         this.props.navigation.navigate('Auth');
         return;
       }
 
-      if((await ServerCommunication.RetrieveAndStoreRestaurantList()).status != 200){
+      if((await ServerCommunication.RetrieveAndStoreRestaurantList()).success == false){
         this.props.navigation.navigate('Auth');
         return;
       }

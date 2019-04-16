@@ -182,25 +182,25 @@ class SignUpScreen extends React.Component {
       this.setState({isLoading: true});
 
       let response = await ServerCommunication.RequestSignUp(this.state.email, this.state.userName, this.state.password);
-      if(response.status != 201){
+      if(response.success == false){
         this.setState({isLoading: false, showErrorMsg: true, errorMsg: response.message, password: "", passwordRetype: ""});
         return;
       }
 
       response = await ServerCommunication.RetrieveAndStoreJwt(this.state.userName, this.state.password);
-      if(response.status != 200){
+      if(response.success == false){
         this.setState({isLoading: false, showErrorMsg: true, errorMsg: response.message, password: "", passwordRetype: ""});
         return;
       }
 
       response = await ServerCommunication.RetrieveAndStoreMapsKey();
-      if(response.status != 200){
+      if(response.success == false){
         this.setState({isLoading: false, showErrorMsg: true, errorMsg: response.message, password: "", passwordRetype: ""});
         return;
       }
 
       response = await ServerCommunication.RetrieveAndStoreRestaurantList();
-      if(response.status != 200){
+      if(response.success == false){
         this.setState({isLoading: false, showErrorMsg: true, errorMsg: response.message, password: "", passwordRetype: ""});
         return;
       }

@@ -90,17 +90,20 @@ class SignInScreen extends React.Component {
 
       this.setState({isLoading: true, showErrorMsg: false});
 
-      if((await ServerCommunication.RetrieveAndStoreJwt(this.state.userName, this.state.password)).status != 200){
-        this.setState({isLoading: false, showErrorMsg: true, errorMsg: "Unable to authenticate. Make sure credentials are correct"});
+      let response = (await ServerCommunication.RetrieveAndStoreJwt(this.state.userName, this.state.password));
+      if(response.success == false){
+        this.setState({isLoading: false, showErrorMsg: true, errorMsg: response.message});
         return;
       }
 
-      if((await ServerCommunication.RetrieveAndStoreMapsKey()).status != 200){
-        this.setState({isLoading: false, showErrorMsg: true, errorMsg: "Unable to get server data"});
+      response = (await ServerCommunication.RetrieveAndStoreMapsKey());
+      if(response.success == false){
+        this.setState({isLoading: false, showErrorMsg: true, errorMsg: response.message});
         return;
       }
 
-      if((await ServerCommunication.RetrieveAndStoreRestaurantList()).status != 200){
+      response = (await ServerCommunication.RetrieveAndStoreRestaurantList());
+      if(response.success == false){
         Alert.alert('Data retrieval error', 'Unable to get user data from server', [{text: 'OK', onPress: () => { }}]);
         return;
       }
