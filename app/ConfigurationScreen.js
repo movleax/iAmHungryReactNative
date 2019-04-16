@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Switch} from 'react-native';
+import {Text, View, Switch, Picker} from 'react-native';
 import {connect} from 'react-redux';
 import Slider from '@react-native-community/slider';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -52,10 +52,53 @@ class ConfigurationScreen extends Component {
     this.props.updateUserConfiguration(updatedUserConfig);
   }
 
+  _updateMinPriceLevel(newValue)
+  {
+    var updatedUserConfig = Object.assign({}, this.props.user_configuration);
+    updatedUserConfig.price_level_min = newValue;
+    this.props.updateUserConfiguration(updatedUserConfig);
+  }
+
   _updateMinAvgRating(newValue)
   {
     var updatedUserConfig = Object.assign({}, this.props.user_configuration);
     updatedUserConfig.avg_rating_min = newValue;
+    this.props.updateUserConfiguration(updatedUserConfig);
+  }
+
+  _updateUnitOfDistance(newValue)
+  {
+    var updatedUserConfig = Object.assign({}, this.props.user_configuration);
+    updatedUserConfig.unitOfDistance = newValue;
+
+    switch(newValue)
+    {
+      case 'mile': 
+        updatedUserConfig.max_search_radius = 50; 
+        if(updatedUserConfig.search_radius > 50) {
+          updatedUserConfig.search_radius = 50;
+        }
+        break;
+      case 'km': 
+        updatedUserConfig.max_search_radius = 80;
+        if(updatedUserConfig.search_radius > 80) {
+          updatedUserConfig.search_radius = 80;
+        }
+        break;
+      case 'meter': 
+        updatedUserConfig.max_search_radius = 80470;
+        if(updatedUserConfig.search_radius > 80470) {
+          updatedUserConfig.search_radius = 80470;
+        }
+        break;
+      case 'nmi': 
+        updatedUserConfig.max_search_radius = 45;
+        if(updatedUserConfig.search_radius > 45) {
+          updatedUserConfig.search_radius = 45;
+        }
+        break;
+    }
+
     this.props.updateUserConfiguration(updatedUserConfig);
   }
 
@@ -72,14 +115,37 @@ class ConfigurationScreen extends Component {
         </View>
         <View style={{margin: 20}}>
           <Text style={{fontWeight:"bold"}}>
-            Search Radius: {this.props.user_configuration.search_radius <= 0 ? 1 : this.props.user_configuration.search_radius} mi
+            Search Radius: {this.props.user_configuration.search_radius <= 0 ? 1 : this.props.user_configuration.search_radius} {this.props.user_configuration.unitOfDistance}
           </Text>
           <Slider
             value={this.props.user_configuration.search_radius}
             onValueChange={value => this._updateSearchRadius(value)}
-            maximumValue={50}
+            maximumValue={this.props.user_configuration.max_search_radius}
             minimumValue={0}
             step={5}
+          />
+          <Picker
+            selectedValue={this.props.user_configuration.unitOfDistance}
+            style={{height: 50, width: 135}}
+            onValueChange={(itemValue, itemIndex) =>
+              this._updateUnitOfDistance(itemValue)
+            }>
+            <Picker.Item label="Mile" value="mile" />
+            <Picker.Item label="Kilometer" value="km" />
+            <Picker.Item label="Meter" value="meter" />
+            <Picker.Item label="Nautical Mile" value="nmi" />
+          </Picker>
+        </View>
+        <View style={{margin: 20}}>
+          <Text style={{fontWeight:"bold"}}>
+            Minimum price level: {this.props.user_configuration.price_level_min > 0 ? "$".repeat(this.props.user_configuration.price_level_min) : 'free'}
+          </Text>
+          <Slider
+            value={this.props.user_configuration.price_level_min}
+            onValueChange={value => this._updateMinPriceLevel(value)}
+            maximumValue={4}
+            minimumValue={0}
+            step={1}
           />
         </View>
         <View style={{margin: 20}}>
