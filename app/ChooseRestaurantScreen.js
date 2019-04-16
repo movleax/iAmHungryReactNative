@@ -61,7 +61,7 @@ class ChooseRestaurantScreen extends Component {
           longitude:restaurant.location.lng
         }
 
-        return haversine(start, end, {unit: this.props.unitOfDistance}) <= this.props.user_configuration.search_radius;
+        return haversine(start, end, {unit: this.props.user_configuration.unitOfDistance}) <= this.props.user_configuration.search_radius;
       });
       console.log(filteredRestaurantList);
 
@@ -191,7 +191,6 @@ function mapStateToProps(state){
       restaurant_list: state.restaurant_list,
       user_configuration: state.user_configuration,
       currentLocation: state.currentLocation,
-      unitOfDistance: state.unitOfDistance,
     }
 }
 
