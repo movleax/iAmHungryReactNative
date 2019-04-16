@@ -1,25 +1,18 @@
 const initialState = {
     GOOGLE_MAPS_APIKEY: null,
     restaurant_list: [
-      {
-        name: "McDonald's",
-        address: "2400 Sunrise Blvd, Rancho Cordova, CA 95670, USA",
-        hours_weekly: ["Monday: 5:00 AM – 12:00 AM", "Tuesday: 5:00 AM – 12:00 AM", "Wednesday: 5:00 AM – 12:00 AM", "Thursday: 5:00 AM – 12:00 AM", "Friday: 5:00 AM – 1:00 AM", "Saturday: 5:00 AM – 1:00 AM", "Sunday: 5:00 AM – 1:00 AM"],
-        id: "ChIJcxJNR4LdmoARHohf4RwJhbM",
-        location: {lat: 38.6151029, lng: -121.2699112},
-        phone: "(916) 635-1991",
-        price_level: 1,
-        rating: 3.3,
-      }
+
     ],
     user_configuration: {
       search_radius: 25,
-      include_new_user_experiences: true,
+      max_search_radius: 50,
+      unitOfDistance: 'mile',
+      include_new_user_experiences: false,
       price_level_max: 3,
+      price_level_min: 0,
       avg_rating_min: 0
     },
     currentLocation: {lat: 37.76999, lng: -122.44696},
-    unitOfDistance: 'mile',
   }
 
 
