@@ -38,6 +38,42 @@ class AddRestaurantScreen extends Component {
       return;
     }
 
+    if( restaurantDetails.name == null ||
+      restaurantDetails.formatted_address == null ||
+      restaurantDetails.geometry.location == null ||
+      restaurantDetails.formatted_phone_number == null ||
+      restaurantDetails.price_level == null ||
+      restaurantDetails.rating == null ||
+      restaurantDetails.opening_hours == null ||
+      restaurantDetails.place_id == null
+    )
+    {
+      alert("Unable to add location");
+      return;
+    }
+
+    if( restaurantDetails.name.length <= 0 ||
+        restaurantDetails.formatted_address.length <= 0 ||
+        restaurantDetails.geometry.location == null ||
+        restaurantDetails.formatted_phone_number.length <= 0 ||
+        restaurantDetails.price_level == null ||
+        restaurantDetails.rating == null ||
+        restaurantDetails.opening_hours.weekday_text.length < 7 ||
+        restaurantDetails.place_id.length <= 0
+      )
+    {
+      alert("Unable to add location");
+      return;
+    }
+
+    if(restaurantDetails.types.find(type => type == 'food') != 'food')
+    {
+      alert("Unable to add location");
+      this.props.navigation.state.params.RefreshParentScreen();
+      this.props.navigation.goBack();
+      return;
+    }
+
     this.setState({isLoading: true, showErrorMsg: false});
 
     if((await ServerCommunication.PostRestaurantToServer(restaurantDetails)).status != 200){
@@ -67,8 +103,6 @@ class AddRestaurantScreen extends Component {
       fetchDetails={true}
       renderDescription={row => row.description} // custom description render
       onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-        // console.log(data);
-        // console.log(details);
         this._addRestaurant(details);
       }}
 
@@ -95,7 +129,7 @@ class AddRestaurantScreen extends Component {
       }
       }}
 
-      currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+      currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
       currentLocationLabel="Current location"
       nearbyPlacesAPI='None' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
       GoogleReverseGeocodingQuery={{
