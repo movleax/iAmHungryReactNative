@@ -19,6 +19,7 @@ const initialState = {
       avg_rating_min: 0
     },
     currentLocation: {lat: 37.76999, lng: -122.44696},
+    unitOfDistance: 'mile',
   }
 
 
