@@ -25,8 +25,7 @@ class AddRestaurantScreen extends Component {
     super(props);
 
     this.state = {
-      isLoading: false,
-      showErrorMsg: false
+      isLoading: false
     }
   }
 
@@ -35,6 +34,9 @@ class AddRestaurantScreen extends Component {
     // check to see if the restaurant already exists in the store; return if this is the case
     if(this.props.restaurant_list.some(restaurant => restaurant.id === restaurantDetails.place_id))
     {
+      alert("Location already exists in list");
+      this.props.navigation.state.params.RefreshParentScreen();
+      this.props.navigation.goBack();
       return;
     }
 
@@ -49,6 +51,8 @@ class AddRestaurantScreen extends Component {
     )
     {
       alert("Unable to add location");
+      this.props.navigation.state.params.RefreshParentScreen();
+      this.props.navigation.goBack();
       return;
     }
 
@@ -63,6 +67,8 @@ class AddRestaurantScreen extends Component {
       )
     {
       alert("Unable to add location");
+      this.props.navigation.state.params.RefreshParentScreen();
+      this.props.navigation.goBack();
       return;
     }
 
@@ -74,15 +80,19 @@ class AddRestaurantScreen extends Component {
       return;
     }
 
-    this.setState({isLoading: true, showErrorMsg: false});
+    this.setState({isLoading: true});
 
-    if((await ServerCommunication.PostRestaurantToServer(restaurantDetails)).status != 200){
-      this.setState({isLoading: false, showErrorMsg: true});
+    let resposne = (await ServerCommunication.PostRestaurantToServer(restaurantDetails));
+    if(resposne.success == false){
+      this.setState({isLoading: false});
+      alert(resposne.message);
       return;
     }
 
-    if((await ServerCommunication.RetrieveAndStoreRestaurantList()).status != 200){
-      this.setState({isLoading: false, showErrorMsg: true});
+    resposne = (await ServerCommunication.RetrieveAndStoreRestaurantList());
+    if(resposne.success == false){
+      this.setState({isLoading: false});
+      alert(resposne.message);
       return;
     }
 
