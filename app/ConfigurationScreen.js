@@ -2,92 +2,114 @@ import React, {Component} from 'react';
 import {Text, View, Switch} from 'react-native';
 import {connect} from 'react-redux';
 import Slider from '@react-native-community/slider';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class ConfigurationScreen extends Component {
   static navigationOptions = {
     title: 'Configuration',
   };
 
-    _updateRestaurantExpChoice(newValue)
-    {
-      var updatedUserConfig = Object.assign({}, this.props.user_configuration);
-      updatedUserConfig.include_new_user_experiences = newValue;
-      console.log(updatedUserConfig.include_new_user_experiences)
-      this.props.updateUserConfiguration(updatedUserConfig);
-    }
-
-    _updateSearchRadius(newValue)
-    {
-      var updatedUserConfig = Object.assign({}, this.props.user_configuration);
-      updatedUserConfig.search_radius = newValue;
-      this.props.updateUserConfiguration(updatedUserConfig);
-    }
-
-    _updateMaxPriceLevel(newValue)
-    {
-      var updatedUserConfig = Object.assign({}, this.props.user_configuration);
-      updatedUserConfig.price_level_max = newValue;
-      this.props.updateUserConfiguration(updatedUserConfig);
-    }
-
-    _updateMinAvgRating(newValue)
-    {
-      var updatedUserConfig = Object.assign({}, this.props.user_configuration);
-      updatedUserConfig.avg_rating_min = newValue;
-      this.props.updateUserConfiguration(updatedUserConfig);
-    }
-
-    render() {
-      console.log(this.props);
-      return (
-        <View>
-          <View style={{flexDirection: 'row', margin: 20}}>
-            <Switch
-              onValueChange = {value => this._updateRestaurantExpChoice(value)}
-              value = {this.props.user_configuration.include_new_user_experiences}
-            />
-            <Text> Include new restaurant experiences</Text>
-          </View>
-          <View style={{margin: 20}}>
-            <Text style={{fontWeight:"bold"}}>
-              Search Radius: {this.props.user_configuration.search_radius <= 0 ? 1 : this.props.user_configuration.search_radius} mi
-            </Text>
-            <Slider
-              value={this.props.user_configuration.search_radius}
-              onValueChange={value => this._updateSearchRadius(value)}
-              maximumValue={50}
-              minimumValue={0}
-              step={5}
-            />
-          </View>
-          <View style={{margin: 20}}>
-            <Text style={{fontWeight:"bold"}}>
-              Max price level: {this.props.user_configuration.price_level_max > 0 ? "$".repeat(this.props.user_configuration.price_level_max) : 'free'}
-            </Text>
-            <Slider
-              value={this.props.user_configuration.price_level_max}
-              onValueChange={value => this._updateMaxPriceLevel(value)}
-              maximumValue={4}
-              minimumValue={0}
-              step={1}
-            />
-          </View>
-          <View style={{margin: 20}}>
-            <Text style={{fontWeight:"bold"}}>
-              Average rating minimum: {this.props.user_configuration.avg_rating_min/10} / 5
-            </Text>
-            <Slider
-              value={this.props.user_configuration.avg_rating_min}
-              onValueChange={value => this._updateMinAvgRating(value)}
-              maximumValue={50}
-              minimumValue={0}
-              step={1}
-            />
-          </View>
-        </View>
-      );
-    }
+  constructor(props){
+    super(props);
   }
+
+  componentDidMount() {
+    this.props.navigation.addListener('willBlur', this._onBlur);
+  }
+  
+  componentWillUnmount() {
+    this.props.navigation.removeListener('willBlur', this._onBlur);
+  }
+
+  _onBlur = () => {
+    this._saveUserConfiguration();
+  };
+  
+  async _saveUserConfiguration(){
+    await AsyncStorage.setItem('user_configuration', JSON.stringify(this.props.user_configuration));
+    console.log("saving user_configuration data at ConfigurationSettings screen");
+  }
+
+  _updateRestaurantExpChoice(newValue)
+  {
+    var updatedUserConfig = Object.assign({}, this.props.user_configuration);
+    updatedUserConfig.include_new_user_experiences = newValue;
+    console.log(updatedUserConfig.include_new_user_experiences)
+    this.props.updateUserConfiguration(updatedUserConfig);
+  }
+
+  _updateSearchRadius(newValue)
+  {
+    var updatedUserConfig = Object.assign({}, this.props.user_configuration);
+    updatedUserConfig.search_radius = newValue;
+    this.props.updateUserConfiguration(updatedUserConfig);
+  }
+
+  _updateMaxPriceLevel(newValue)
+  {
+    var updatedUserConfig = Object.assign({}, this.props.user_configuration);
+    updatedUserConfig.price_level_max = newValue;
+    this.props.updateUserConfiguration(updatedUserConfig);
+  }
+
+  _updateMinAvgRating(newValue)
+  {
+    var updatedUserConfig = Object.assign({}, this.props.user_configuration);
+    updatedUserConfig.avg_rating_min = newValue;
+    this.props.updateUserConfiguration(updatedUserConfig);
+  }
+
+  render() {
+    console.log(this.props);
+    return (
+      <View>
+        <View style={{flexDirection: 'row', margin: 20}}>
+          <Switch
+            onValueChange = {value => this._updateRestaurantExpChoice(value)}
+            value = {this.props.user_configuration.include_new_user_experiences}
+          />
+          <Text> Include new restaurant experiences</Text>
+        </View>
+        <View style={{margin: 20}}>
+          <Text style={{fontWeight:"bold"}}>
+            Search Radius: {this.props.user_configuration.search_radius <= 0 ? 1 : this.props.user_configuration.search_radius} mi
+          </Text>
+          <Slider
+            value={this.props.user_configuration.search_radius}
+            onValueChange={value => this._updateSearchRadius(value)}
+            maximumValue={50}
+            minimumValue={0}
+            step={5}
+          />
+        </View>
+        <View style={{margin: 20}}>
+          <Text style={{fontWeight:"bold"}}>
+            Max price level: {this.props.user_configuration.price_level_max > 0 ? "$".repeat(this.props.user_configuration.price_level_max) : 'free'}
+          </Text>
+          <Slider
+            value={this.props.user_configuration.price_level_max}
+            onValueChange={value => this._updateMaxPriceLevel(value)}
+            maximumValue={4}
+            minimumValue={0}
+            step={1}
+          />
+        </View>
+        <View style={{margin: 20}}>
+          <Text style={{fontWeight:"bold"}}>
+            Average rating minimum: {this.props.user_configuration.avg_rating_min/10} / 5
+          </Text>
+          <Slider
+            value={this.props.user_configuration.avg_rating_min}
+            onValueChange={value => this._updateMinAvgRating(value)}
+            maximumValue={50}
+            minimumValue={0}
+            step={1}
+          />
+        </View>
+      </View>
+    );
+  }
+}
   
 function mapStateToProps(state){
   return {
