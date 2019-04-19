@@ -10,7 +10,7 @@ class ServerCommunication{
 
     static getServerUrl()
     {
-      return "http://192.168.50.101:5000";
+      return "https://api.iamhungry.xyz:5000";
     }
 
     static async RequestSignUp(email, username, password){
@@ -137,6 +137,8 @@ class ServerCommunication{
           await AsyncStorage.setItem('jwt', jwt.tokenType + " " + jwt.accessToken);
         }
         
+        console.log(response);
+
         return response;
     }
 
