@@ -135,9 +135,9 @@ class SignUpScreen extends React.Component {
             return;
         }
 
-        if(this.state.userName.length <= 2)
+        if(this.state.userName.length <= 2 || this.state.userName.length > 15)
         {
-            this.setState({showErrorMsg:true, errorMsg: "Username must have 3 or more characters", password: "", passwordRetype: ""})
+            this.setState({showErrorMsg:true, errorMsg: "Username must be between 3 and 15 characters", password: "", passwordRetype: ""})
             return;
         }
 
