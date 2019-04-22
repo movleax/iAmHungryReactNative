@@ -34,47 +34,40 @@ class AddRestaurantScreen extends Component {
     // check to see if the restaurant already exists in the store; return if this is the case
     if(this.props.restaurant_list.some(restaurant => restaurant.id === restaurantDetails.place_id))
     {
-      alert("Location already exists in list");
       this.props.navigation.state.params.RefreshParentScreen();
       this.props.navigation.goBack();
       return;
     }
 
-    if( restaurantDetails.name == null ||
-      restaurantDetails.formatted_address == null ||
-      restaurantDetails.geometry.location == null ||
-      restaurantDetails.formatted_phone_number == null ||
-      restaurantDetails.price_level == null ||
-      restaurantDetails.rating == null ||
-      restaurantDetails.opening_hours == null ||
-      restaurantDetails.place_id == null
-    )
-    {
-      alert("Unable to add location");
+    if(restaurantDetails.name == null){
+      alert("Unable to add location: location does not have a name");
       this.props.navigation.state.params.RefreshParentScreen();
       this.props.navigation.goBack();
       return;
     }
 
-    if( restaurantDetails.name.length <= 0 ||
-        restaurantDetails.formatted_address.length <= 0 ||
-        restaurantDetails.geometry.location == null ||
-        restaurantDetails.formatted_phone_number.length <= 0 ||
-        restaurantDetails.price_level == null ||
-        restaurantDetails.rating == null ||
-        restaurantDetails.opening_hours.weekday_text.length < 7 ||
-        restaurantDetails.place_id.length <= 0
-      )
-    {
-      alert("Unable to add location");
+    if(restaurantDetails.formatted_address == null){
+      alert("Unable to add location: location does not have a valid address");
       this.props.navigation.state.params.RefreshParentScreen();
       this.props.navigation.goBack();
       return;
+    }
+
+    if(restaurantDetails.place_id == null){
+      alert("Unable to add location: location does not have a valid id");
+      this.props.navigation.state.params.RefreshParentScreen();
+      this.props.navigation.goBack();
+      return;
+    }
+
+    // if price level is null, we should set this to something other than null, otherwise database will have price level listed as 0, which is already designated as "free" according to google.
+    if(restaurantDetails.price_level == null){
+      restaurantDetails.price_level = -1;
     }
 
     if(restaurantDetails.types.find(type => type == 'food') != 'food')
     {
-      alert("Unable to add location");
+      alert("Unable to add location: is not listed to offer food");
       this.props.navigation.state.params.RefreshParentScreen();
       this.props.navigation.goBack();
       return;
