@@ -117,6 +117,12 @@ class SignUpScreen extends React.Component {
             return;
         }
 
+        if(this.state.email.length > 40)
+        {
+            this.setState({showErrorMsg:true, errorMsg: "Email cannot contain more than 40 characters", password: "", passwordRetype: ""})
+            return;
+        }
+
         if(!this._checkEmailFormat())
         {
             this.setState({showErrorMsg:true, errorMsg: "Invalid email format", password: "", passwordRetype: ""})
@@ -129,7 +135,13 @@ class SignUpScreen extends React.Component {
             return;
         }
 
-        if(this.state.password.length < 6)
+        if(this.state.userName.length <= 2)
+        {
+            this.setState({showErrorMsg:true, errorMsg: "Username must have 3 or more characters", password: "", passwordRetype: ""})
+            return;
+        }
+
+        if(this.state.password.length < 6 || this.state.password.length > 20)
         {
             this.setState({showErrorMsg:true, errorMsg: "Password must be between 6 and 20 characters", password: "", passwordRetype: ""})
             return;
