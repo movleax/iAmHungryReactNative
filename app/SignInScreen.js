@@ -77,7 +77,7 @@ class SignInScreen extends React.Component {
         return;
       }
 
-      if(this.state.userName.password <= 0)
+      if(this.state.password <= 0)
       {
         this.setState({showErrorMsg: true, errorMsg: "Password field is blank"});
         return;
